@@ -1,0 +1,27 @@
+CMSI 4071 Fall 2024
+Project Proposal Feedback
+Project: squibble
+=========================
+Proposal Document [2 points]:
+Nice work on this document!  The description section is well done and gives
+a good idea of similar applications and what is different about yours.  The
+integration of open source software is a great idea.  The justification
+section, although short, covers what is needed.
+
+Proposal Presentation [3 points]:
+The presentation has some nice graphics, but is marred somewhat by the use
+of Notepad to display the bullets.  If you had perhaps taken a picture or
+snapshot somehow and clipped the menu and title bar out, it would have been
+better, IMHO, although perhaps you did that on purpose to show the audience
+the interactive nature of your application.
+
+One further note, when I viewed the PDF in Adobe, the graphics were off the
+bottom of the page, and on the title slide your names weren't centered.  It
+may be that more testing is needed prior to committing to your repository.
+
+
+Summary:
+--------
+Total:  5% out of 5% for this deliverable.
+
+Nice job overall!  Keep up the good work.
