@@ -11,6 +11,31 @@ const Whiteboard = () => {
   const [previousPosition, setPreviousPosition] = useState(null);
   const [showBoundingBoxes, setShowBoundingBoxes] = useState(false);
   const [lines, setLines] = useState([]); // Stores details of all drawn lines
+  const [selectedColorIndex, setSelectedColorIndex] = useState(0); // Track the selected color index
+
+  const [sampleColors, setSampleColors] = useState([
+    '#000000', '#FF0000', '#00FF00', '#0000FF', '#FFFF00', '#FF00FF'
+  ]);
+
+
+  // Handle color selection from the sample palette
+  const handleSampleColorSelect = (color, index) => {
+    setCurrentColor(color);
+    setSelectedColorIndex(index);
+  };
+
+  // Handle color selection from the custom color picker
+  const handleCustomColorSelect = (e) => {
+    const newColor = e.target.value;
+    setCurrentColor(newColor);
+
+    // Update the selected color swatch with the custom color
+    setSampleColors((prevColors) => {
+      const newColors = [...prevColors];
+      newColors[selectedColorIndex] = newColor; // Replace the color at the selected index
+      return newColors;
+    });
+  };
 
   // Handle mouse down event for drawing or erasing
   const handleMouseDown = (e) => {
@@ -24,7 +49,7 @@ const Whiteboard = () => {
     }
   };
 
-  // Handle mouse up event to stop drawing or erasing
+  // Handle mouse up event to stop drawing or erasing (line is finished being drawn by user)
   const handleMouseUp = () => {
     if (activeTool === 'pen') {
       setIsDrawing(false);
@@ -146,9 +171,9 @@ const Whiteboard = () => {
         ref={canvasRef}
         onMouseDown={handleMouseDown}
         onMouseUp={handleMouseUp}
-        onMouseLeave={handleMouseUp} // Stop drawing or erasing if the mouse leaves the canvas
+        onMouseLeave={handleMouseUp}
         onMouseMove={handleMouseMove}
-        className="drawing-canvas"
+        className={`drawing-canvas ${activeTool === 'pan' ? 'pan-cursor' : ''}`}
       />
 
       {/* Tool tabs on the right edge */}
@@ -160,13 +185,6 @@ const Whiteboard = () => {
         >
           Pen Tool
           <div className="tool-options">
-            <label>Select Color: </label>
-            <input
-              type="color"
-              value={currentColor}
-              onChange={handleColorSelect}
-              onClick={(e) => e.stopPropagation()} // Prevent deselecting the tool
-            />
             <label>Brush Size: </label>
             <input
               type="range"
@@ -174,7 +192,7 @@ const Whiteboard = () => {
               max="20"
               value={brushSize}
               onChange={handleBrushSizeChange}
-              onClick={(e) => e.stopPropagation()} // Prevent deselecting the tool
+              onClick={(e) => e.stopPropagation()}
             />
           </div>
         </div>
@@ -199,6 +217,29 @@ const Whiteboard = () => {
         <div className="tool-tab" onClick={() => setShowBoundingBoxes(!showBoundingBoxes)}>
           {showBoundingBoxes ? 'Hide Bounding Boxes' : 'Show Bounding Boxes'}
         </div>
+      </div>
+
+      {/* Always visible color menu */}
+      <div className="color-menu">
+        {sampleColors.map((color, index) => (
+          <div
+            key={index}
+            className="color-sample"
+            style={{ backgroundColor: color }}
+            onClick={(e) => {
+              e.stopPropagation(); // Prevent deselecting the tool
+              handleSampleColorSelect(color, index);
+            }}
+          />
+        ))}
+        {/* Custom Color Picker */}
+        <input
+          type="color"
+          value={currentColor}
+          onChange={handleCustomColorSelect}
+          className="custom-color-picker"
+          title="Choose Custom Color"
+        />
       </div>
 
       {/* Render bounding boxes if the toggle is on */}

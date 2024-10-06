@@ -12,6 +12,14 @@
   left: 0;
 }
 
+.drawing-canvas.pan-cursor {
+  cursor: grab; /* Hand cursor when panning */
+}
+
+.drawing-canvas.pan-cursor:active {
+  cursor: grabbing; /* Closed hand when actively panning */
+}
+
 .tool-tabs {
   position: fixed;
   right: 0;
@@ -20,6 +28,7 @@
   display: flex;
   flex-direction: column;
   gap: 10px;
+  width: 130px;
 }
 
 .tool-tab {
@@ -43,4 +52,49 @@
   position: absolute;
   border: 1px dashed red;
   pointer-events: none; /* Allow interactions with the canvas and other elements */
+}
+
+.color-menu {
+  position: fixed;
+  right: 160px; /* Slightly offset from the tool tabs */
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  background-color: #f9f9f9;
+  padding: 10px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.color-sample {
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  border: 2px solid #999;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.color-sample:hover {
+  transform: scale(1.2); /* Enlarge slightly on hover */
+}
+
+.custom-color-picker {
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.custom-color-picker::-webkit-color-swatch {
+  border-radius: 50%;
+}
+
+.custom-color-picker::-webkit-color-swatch-wrapper {
+  padding: 0;
 }
