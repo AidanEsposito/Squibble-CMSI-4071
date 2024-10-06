@@ -1,20 +1,39 @@
 .whiteboard {
-  width: 100vw;
-  height: 80vh;
-  background-color: white;
-  overflow: scroll;
-  border: 2px solid #ccc;
   position: relative;
-  cursor: grab;
+  width: 100%;
+  height: 100vh;
+  overflow: scroll; /* Enable scrolling for the larger canvas */
 }
 
-.whiteboard:active {
-  cursor: grabbing;
+.drawing-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
 }
 
-.content {
-  width: 2000px; /* Arbitrarily large canvas size */
-  height: 2000px;
-  background-color: #f4f4f4;
-  position: relative;
+.tool-tabs {
+  position: fixed;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.tool-tab {
+  width: 100px;
+  padding: 10px;
+  background-color: #ccc;
+  border: 1px solid #999;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+}
+
+.tool-tab.active {
+  background-color: #aaa;
+}
+
+.tool-options {
+  margin-top: 10px;
 }
