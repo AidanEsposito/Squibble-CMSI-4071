@@ -2,7 +2,8 @@
   position: relative;
   width: 100%;
   height: 100vh;
-  overflow: scroll; /* Enable scrolling for the larger canvas */
+  overflow: auto; /* Allow scrolling for the larger canvas */
+  background-color: #f0f0f0; /* Optional: makes the canvas area stand out */
 }
 
 .drawing-canvas {
@@ -22,7 +23,7 @@
 }
 
 .tool-tab {
-  width: 100px;
+  width: 120px;
   padding: 10px;
   background-color: #ccc;
   border: 1px solid #999;
@@ -36,4 +37,10 @@
 
 .tool-options {
   margin-top: 10px;
+}
+
+.bounding-box {
+  position: absolute;
+  border: 1px dashed red;
+  pointer-events: none; /* Allow interactions with the canvas and other elements */
 }
