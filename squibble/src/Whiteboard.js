@@ -91,10 +91,10 @@ const Whiteboard = () => {
       prevLines.filter(
         (line) =>
           !(
-            offsetX >= Math.min(line.start.x, line.end.x) &&
-            offsetX <= Math.max(line.start.x, line.end.x) &&
-            offsetY >= Math.min(line.start.y, line.end.y) &&
-            offsetY <= Math.max(line.start.y, line.end.y)
+            offsetX >= Math.min(line.start.x, line.end.x) - line.size / 2 &&
+            offsetX <= Math.max(line.start.x, line.end.x) + line.size / 2 &&
+            offsetY >= Math.min(line.start.y, line.end.y) - line.size / 2 &&
+            offsetY <= Math.max(line.start.y, line.end.y) + line.size / 2
           )
       )
     );
@@ -204,10 +204,10 @@ const Whiteboard = () => {
       {/* Render bounding boxes if the toggle is on */}
       {showBoundingBoxes &&
         lines.map((line, index) => {
-          const minX = Math.min(line.start.x, line.end.x);
-          const minY = Math.min(line.start.y, line.end.y);
-          const maxX = Math.max(line.start.x, line.end.x);
-          const maxY = Math.max(line.start.y, line.end.y);
+          const minX = Math.min(line.start.x, line.end.x) - line.size / 2;
+          const minY = Math.min(line.start.y, line.end.y) - line.size / 2;
+          const maxX = Math.max(line.start.x, line.end.x) + line.size / 2;
+          const maxY = Math.max(line.start.y, line.end.y) + line.size / 2;
           return (
             <div
               key={index}
