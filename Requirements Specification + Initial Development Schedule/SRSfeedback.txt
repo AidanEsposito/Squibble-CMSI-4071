@@ -1,0 +1,57 @@
+
+Documentation Feedback ~ Deliverable #2
+Software Requirements Specification
+Initial Development Schedule
+CMSI 4071 Fall 2024
+=======================================
+
+COMPONENT BREAKDOWN:
+   This is a bit light, but you do list the different CSC's and what they
+   are used for.
+
+FUNCTIONAL REQUIREMENTS:
+   Excellent work here!  This is one of the most complete requirements sets
+   I've seen this semester!  A couple of things to note:
+
+   Whenever you see the word "and" in a 'shall' statement, you should see if
+   that actually is two or three requirements, not just one.  For example:
+
+      1.3.1.3 The page shall have a whiteboard that will have a fixed length
+              and height and shall be navigable with dragging of the mouse,
+              mousewheel, and arrow keys.
+
+   This should be:
+
+      1.3.1.3 The page shall have a whiteboard with a fixed length and height.
+      1.3.1.4 The page shall be navigable by dragging the mouse.
+      1.3.1.5 The page shall be navigable by scrolling the mousewheel.
+      1.3.1.6 The page shall be navigable by using the arrow keys.
+
+   Secondly, there should NOT be numbers on 'will' or 'should' statements.
+   Those statements should come below a numbered 'shall' statement and will be
+   associated with those numbered statements individually.
+
+PERFORMANCE REQUIREMENTS:
+   Your performance requirement statement is actually about the hardware, not
+   the application as it should be.  If you don't have any requirements for
+   your application's performance, you can simply say "Not Applicable."
+
+ENVIRONMENT REQUIREMENTS:
+   Good job on this section!
+
+OVERALL ASSESSMENT:
+   Category                          Points
+   Component Breakdown                 1/1
+   Functional Requirements             3/4
+   Performance Requirements            2/2
+   Environment Requirements            1/1
+                                     =====
+   Subtotal                            8/8
+   Preliminary Schedule                2/2
+   ------------------------------------------------------
+   Total Percentage:   9/10 = 90% which is an A-minus
+
+Take a stab at fixing some of those requirements and should statements, and
+get it committed by the end of the semester for full credit on this document.
+
+Excellent work, guys!
