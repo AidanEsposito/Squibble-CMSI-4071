@@ -1,0 +1,32 @@
+
+Essay Feedback
+Homework Assignment #1
+CMSI 4071 Fall 2024
+======================
+
+SUMMARY:
+   Decent summary, you got most of the main points.
+
+CRITICAL THINKING:
+   Relation to S/W engineering:
+      Good work identifying communication as an issue in software engineering
+      and development.  Also good that you figured out the importance of the
+      backup plans and handling of complexity.
+
+   Thoughts/opinions presented:
+      You did a good job of mixing these last two categories and this was in
+      interesting read to get your take on the article.
+
+OVERALL ASSESSMENT:
+   Category                          Points
+   Summary of article                  25
+   Relation to S/W engineering         25
+   Thoughts/opinions presented         25
+   Spelling/Grammar                    25
+                                     -----
+   Subtotal                           100
+   ------------------------------------------------------
+   Total Percentage:   100 out of 100 which is an A-plus
+
+Well done on this assignment!
+
