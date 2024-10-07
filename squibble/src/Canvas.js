@@ -40,13 +40,12 @@ const Canvas = ({ currentColor, brushSize, activeTool, lines, setLines, showBoun
   const handleMouseMove = (e) => {
     const canvas = canvasRef.current;
     const context = canvas.getContext('2d');
-    
     if (activeTool === 'pan' && e.buttons === 1) {
       // Handle panning
       const board = canvas.parentElement;
       board.scrollLeft -= e.movementX;
       board.scrollTop -= e.movementY;
-
+      
     } else if (activeTool === 'pen' && isDrawing) {
       const { offsetX, offsetY } = e.nativeEvent;
       const currentPosition = { x: offsetX, y: offsetY };

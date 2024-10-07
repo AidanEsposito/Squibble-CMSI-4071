@@ -14,13 +14,17 @@ const ColorMenu = ({ currentColor, handleSampleColorSelect, handleCustomColorSel
           }}
         />
       ))}
-      <input
-        type="color"
-        value={currentColor}
-        onChange={handleCustomColorSelect}
-        className="custom-color-picker"
-        title="Choose Custom Color"
-      />
+    {/* Custom Color Picker with Rainbow Border */}
+    <div className="custom-color-container">
+      <div className="rainbow-border"></div>
+        <input
+          type="color"
+          value={currentColor}
+          onChange={handleCustomColorSelect}
+          className="custom-color-picker"
+          title="Choose Custom Color"
+        />
+      </div>
     </div>
   );
 };
