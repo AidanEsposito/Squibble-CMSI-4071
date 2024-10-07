@@ -114,19 +114,6 @@
   z-index: 0; /* Positioned behind the actual color picker */
 }
 
-/* The actual custom color circle */
-.custom-color-picker {
-  appearance: none;
-  width: 28px; /* Slightly smaller than the container */
-  height: 28px;
-  border-radius: 50%;
-  border: none;
-  position: relative;
-  z-index: 1; /* Ensures the color picker is above the gradient */
-  cursor: pointer;
-  background-color: transparent;
-}
-
 .custom-color-picker::-webkit-color-swatch {
   border-radius: 50%;
 }
