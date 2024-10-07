@@ -1,4 +1,5 @@
 import React from 'react';
+import "balloon-css";
 
 const ColorMenu = ({ currentColor, handleSampleColorSelect, handleCustomColorSelect, sampleColors }) => {
   return (
@@ -8,6 +9,8 @@ const ColorMenu = ({ currentColor, handleSampleColorSelect, handleCustomColorSel
           key={index}
           className="color-sample"
           style={{ backgroundColor: color }}
+          aria-label= {"Color ".concat((index+1))}
+          data-balloon-pos="left"
           onClick={(e) => {
             e.stopPropagation(); // Prevent deselecting the tool
             handleSampleColorSelect(color, index);
@@ -17,13 +20,14 @@ const ColorMenu = ({ currentColor, handleSampleColorSelect, handleCustomColorSel
     {/* Custom Color Picker with Rainbow Border */}
     <div className="custom-color-container">
       <div className="rainbow-border"></div>
+      <div className="balloon-wrapper" aria-label= "Custom Color" data-balloon-pos="left">
         <input
           type="color"
           value={currentColor}
           onChange={handleCustomColorSelect}
           className="custom-color-picker"
-          title="Choose Custom Color"
         />
+      </div>
       </div>
     </div>
   );

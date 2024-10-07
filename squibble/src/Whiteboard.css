@@ -81,6 +81,10 @@
   transform: scale(1.2); /* Enlarge slightly on hover */
 }
 
+.balloon-wrapper {
+  display: inline-block;
+}
+
 .custom-color-picker {
   width: 25px;
   height: 25px;
