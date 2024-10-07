@@ -5,14 +5,14 @@ import ColorMenu from './ColorMenu';
 import './Whiteboard.css';
 
 const Whiteboard = () => {
-  const [currentColor, setCurrentColor] = useState('#000000'); // Default pen color
-  const [brushSize, setBrushSize] = useState(2); // Default brush size
-  const [tempBrushSize, setTempBrushSize] = useState(brushSize); // Temporary state for brush size
-  const [activeTool, setActiveTool] = useState(null); // Active tool: 'pen', 'pan', or 'eraser'
-  const [showBoundingBoxes, setShowBoundingBoxes] = useState(false);
-  const [lines, setLines] = useState([]); // Stores details of all drawn lines
-  const [selectedColorIndex, setSelectedColorIndex] = useState(0); // Track the selected color index
-  const [sampleColors, setSampleColors] = useState([
+  const [currentColor, setCurrentColor] = useState('#000000');      // Current pen color
+  const [brushSize, setBrushSize] = useState(2);                    // Current brush size
+  const [tempBrushSize, setTempBrushSize] = useState(brushSize);    // Temporary state for brush size
+  const [activeTool, setActiveTool] = useState(null);               // Active tool: 'pen', 'pan', or 'eraser'
+  const [showBoundingBoxes, setShowBoundingBoxes] = useState(false);// Shows bounding boxes of all lines drawn (debug)
+  const [lines, setLines] = useState([]);                           // Stores details of all drawn lines
+  const [selectedColorIndex, setSelectedColorIndex] = useState(0);  // Track the selected color index
+  const [sampleColors, setSampleColors] = useState([                // Colors used for swatches in color menu
     '#000000', '#FF0000', '#00FF00', '#0000FF', '#FFFF00', '#FF00FF', '#00DEAD'
   ]);
 
