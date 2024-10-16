@@ -34,3 +34,49 @@ button {
 button:hover {
   background-color: #777;
 }
+
+.media-menu {
+  align-items: right;
+  position: absolute;
+  top:87.5px; 
+  right: 0px; 
+  display: flex;
+  flex-direction: column; 
+  background-color: rgb(9, 179, 235);
+  border: 1px solid rgb(9, 179, 235);
+  padding: 10px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.media-menu button {
+  margin-bottom: 10px; 
+  background-color: #555;
+  border: 1px solid #ccc;
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+.media-menu button:hover {
+  background-color: #ddd;
+}
+
+.submenu {
+  position: absolute;
+  top: 50px; 
+  right: 150px; 
+  background-color: rgb(9, 179, 235);
+  border: 1px solid rgb(9, 179, 235);
+  padding: 10px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.submenu input, .submenu select {
+  display: block;
+  margin: 10px 0;
+  padding: 5px;
+}
+
+.submenu label {
+  margin-bottom: 5px;
+  font-weight: bold;
+}

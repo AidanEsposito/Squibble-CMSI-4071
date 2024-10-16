@@ -7,6 +7,7 @@ import './App.css';
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [activeMediaItem, setActiveMediaItem] = useState(null);
 
   //Needs firebase implementation
   const handleSignIn = () => {
@@ -21,7 +22,8 @@ function App() {
   return(
     <div className="App">
       <Header isLoggedIn={isLoggedIn} onSignIn={handleSignIn} onSignOut={handleSignOut} />
-      <Whiteboard />
+      {/* commented out to work on media menu */}
+      {/* <Whiteboard />  */}
     </div>
   )
 }
