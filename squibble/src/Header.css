@@ -20,6 +20,8 @@ header {
 
 .timer {
   font-size: 16px;
+  align-items: center;
+
 }
 
 button {
