@@ -41,11 +41,11 @@ function App() {
         currentColor={currentColor} 
         setCurrentColor={setCurrentColor} 
       />
-      {/* <Whiteboard 
+      <Whiteboard 
         texts={texts} 
         brushSize={brushSize} 
         currentColor={currentColor} 
-      /> */}
+      />
     </div>
   );
 }
