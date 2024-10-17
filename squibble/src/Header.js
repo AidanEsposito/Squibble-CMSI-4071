@@ -1,23 +1,22 @@
 import React, { useState } from 'react';
-import './Header.css'; // Make sure to import your CSS for styling
+import './Header.css';
+import TextOptions from './TextOptions';
 
-const Header = ({ onSignOut, onSignIn, isLoggedIn }) => {
-  const [activeMediaItem, setActiveMediaItem] = useState(null); // State to track the active media item
-  const [timer, setTimer] = useState(0); // Example timer state; adjust as needed
-
-  // Helper function to format the timer (if needed)
-  const formatTime = (time) => {
-    const minutes = Math.floor(time / 60);
-    const seconds = time % 60;
-    return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
-  };
+const Header = ({ onSignOut, onSignIn, isLoggedIn, onAddText, brushSize, setBrushSize, currentColor, setCurrentColor }) => {
+  const [activeMediaItem, setActiveMediaItem] = useState(null);
+  const [showTextOptions, setShowTextOptions] = useState(false);
 
   const handleMediaMenuToggle = (menu) => {
     if (activeMediaItem === menu) {
-      setActiveMediaItem(null); // Close the menu if it's already open
+      setActiveMediaItem(null);
     } else {
-      setActiveMediaItem(menu); // Open the selected menu
+      setActiveMediaItem(menu);
     }
+  };
+
+  const toggleTextOptions = () => {
+    setShowTextOptions(!showTextOptions);
+    setActiveMediaItem(null);
   };
 
   return (
@@ -25,13 +24,11 @@ const Header = ({ onSignOut, onSignIn, isLoggedIn }) => {
       <div className="logo" onClick={() => window.location.reload()}>
         <img src={`${process.env.PUBLIC_URL}/SquibbleLogo.png`} alt="Squibble Logo" />
       </div>
-      <div className="timer">{formatTime(timer)}</div>
       {isLoggedIn ? (
         <>
           <button onClick={onSignOut}>Sign Out</button>
-          <button onClick={() => setActiveMediaItem('archive')}>Archive</button>
           <button onClick={() => handleMediaMenuToggle('media')}>Media Menu</button>
-          {activeMediaItem === 'media' && ( // Render submenus when Media Menu is active
+          {activeMediaItem === 'media' && (
             <div className="media-menu">
               <button onClick={() => handleMediaMenuToggle('text')}>Text</button>
               <button onClick={() => handleMediaMenuToggle('images')}>Images</button>
@@ -40,12 +37,28 @@ const Header = ({ onSignOut, onSignIn, isLoggedIn }) => {
               <button onClick={() => handleMediaMenuToggle('postit')}>Post-it Notes</button>
             </div>
           )}
-          {activeMediaItem === 'drawings' && ( // Show specific settings for Drawings
+          {activeMediaItem === 'text' && (
+            <div className="submenu text-menu">
+              <TextOptions onAddText={onAddText} />
+            </div>
+        )}
+          {activeMediaItem === 'drawings' && (
             <div className="submenu drawing-menu">
               {/* Drawing options here */}
               <label>Brush Size: </label>
-              <input type="range" min="1" max="20" />
-              {/* Add more drawing options here */}
+              <input 
+                type="range" 
+                min="1" 
+                max="20" 
+                value={brushSize} 
+                onChange={(e) => setBrushSize(e.target.value)} 
+              />
+              <label>Color: </label>
+              <input 
+                type="color" 
+                value={currentColor} 
+                onChange={(e) => setCurrentColor(e.target.value)} 
+              />
             </div>
           )}
         </>
@@ -57,3 +70,5 @@ const Header = ({ onSignOut, onSignIn, isLoggedIn }) => {
 };
 
 export default Header;
+
+
