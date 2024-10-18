@@ -12,6 +12,11 @@
   left: 0;
 }
 
+.drawing-canvas.text-cursor {
+  cursor: text; /* Text cursor when typing */
+}
+
+
 .drawing-canvas.pan-cursor {
   cursor: grab; /* Hand cursor when panning */
 }
@@ -94,7 +99,7 @@
   padding: 0;
   cursor: pointer;
   overflow: hidden;
-  transform: translateX(-.5px) translateY(-0px); /* Adjust this value to center the border correctly */
+  transform: translateX(2px) translateY(-0px); /* Adjust this value to center the border correctly */
 }
 
 /* Container for the custom color circle */
@@ -116,7 +121,7 @@
   background: conic-gradient(#ff0000, #ff7f00, #ffff00, #7fff00, #00ff00, #00ff7f, #00ffff, #007fff, #0000ff, #7f00ff, #ff00ff, #ff007f, #ff0000);
   padding: 2px; /* Controls the width of the rainbow border */
   box-sizing: border-box;
-  transform: translateX(-16.5px) translateY(-2px); /* Adjust this value to center the border correctly */
+  transform: translateX(0px) translateY(-2px); /* Adjust this value to center the border correctly */
   z-index: 0; /* Positioned behind the actual color picker */
 }
 

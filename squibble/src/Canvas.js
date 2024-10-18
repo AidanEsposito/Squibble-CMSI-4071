@@ -290,7 +290,7 @@ const Canvas = ({ currentColor, brushSize, activeTool, lines, setLines, showBoun
         onMouseUp={handleMouseUp}
         onMouseLeave={handleMouseUp}
         onMouseMove={handleMouseMove}
-        className={`drawing-canvas ${activeTool === 'pan' ? 'pan-cursor' : ''}`}
+className={`drawing-canvas ${activeTool === 'pan' ? 'pan-cursor' : ''} ${activeTool === 'text' ? 'text-cursor' : ''}`}
       />
       
       {isTextMenuOpen && textMenuPosition && (
