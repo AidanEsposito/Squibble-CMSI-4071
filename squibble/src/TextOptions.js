@@ -94,9 +94,14 @@ const TextOptions = ({ onAddText, selectedColor }) => {
         style={{ padding: '8px', fontSize: '14px', width: '100%' }}
       >
         <option value="Arial">Arial</option>
-        <option value="Verdana">Verdana</option>
-        <option value="Times New Roman">Times New Roman</option>
         <option value="Courier New">Courier New</option>
+        <option value="Georgia">Georgia</option>
+        <option value="Times New Roman">Times New Roman</option>
+        <option value="Verdana">Verdana</option>
+        <option value="Comic Sans MS">Comic Sans MS</option>
+        <option value="Impact">Impact</option>
+        <option value="Lucida Console">Lucida Console</option>
+        <option value="Tahoma">Tahoma</option>
         {/* Add more font options as needed */}
       </select>
 
