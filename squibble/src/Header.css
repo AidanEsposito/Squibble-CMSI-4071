@@ -83,3 +83,10 @@ button:hover {
   font-weight: bold;
 }
 
+.archive{
+  background-color: red;
+  border-color: red;
+  font-weight: bold;
+  
+}
+

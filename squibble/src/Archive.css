@@ -1,0 +1,27 @@
+/* Archive.css */
+.archive-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #f0f0f0; /* Light background for the header */
+  padding: 20px;
+  border-bottom: 2px solid #ccc; /* Optional: add a bottom border */
+}
+
+.archive-header h1 {
+  margin: 0;
+  font-size: 24px; /* Adjust font size as needed */
+}
+
+.back-button {
+  background-color: #007bff; /* Blue button background */
+  color: white; /* White text */
+  border: none;
+  border-radius: 5px; /* Rounded corners */
+  padding: 10px 15px;
+  cursor: pointer;
+}
+
+.back-button:hover {
+  background-color: #0056b3; /* Darker blue on hover */
+}

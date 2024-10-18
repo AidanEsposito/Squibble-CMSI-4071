@@ -1,14 +1,26 @@
 import React, { useState, useEffect } from 'react';
 import './Header.css';
 
-const Header = ({ onSignOut, onSignIn, isLoggedIn, brushSize, setBrushSize, currentColor, setCurrentColor }) => {
+const Header = ({ 
+  user,
+  onSignOut, 
+  onSignIn, 
+  isLoggedIn, 
+  brushSize, 
+  setBrushSize, 
+  currentColor, 
+  setCurrentColor, 
+  onArchiveClick,
+  resetWhiteboard,
+  timer, 
+  setTimer 
+}) => {
   const [activeMediaItem, setActiveMediaItem] = useState(null);
   const [activeSubmenu, setActiveSubmenu] = useState(null);
-  const [timer, setTimer] = useState(0);
 
   const handleMediaMenuToggle = (menu) => {
     setActiveMediaItem(activeMediaItem === menu ? null : menu);
-    setActiveSubmenu(null); // Close any active submenu when toggling media menu
+    setActiveSubmenu(null); 
   };
 
   const handleSubmenuToggle = (submenu) => {
@@ -17,10 +29,20 @@ const Header = ({ onSignOut, onSignIn, isLoggedIn, brushSize, setBrushSize, curr
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setTimer((prevTime) => (prevTime > 0 ? prevTime - 1 : 0));
+      setTimer((prevTime) => {
+        if (prevTime > 0) {
+          return prevTime - 1; 
+        } else {
+          clearInterval(interval);
+          resetWhiteboard(); 
+          //Timer initialized to 5 seconds
+          return 259200; 
+        }
+      });
     }, 1000);
+    
     return () => clearInterval(interval);
-  }, []);
+  }, [resetWhiteboard]); 
 
   const formatTime = (timeInSeconds) => {
     const days = Math.floor(timeInSeconds / 86400);
@@ -35,7 +57,11 @@ const Header = ({ onSignOut, onSignIn, isLoggedIn, brushSize, setBrushSize, curr
       <div className="logo" onClick={() => window.location.reload()}>
         <img src={`${process.env.PUBLIC_URL}/SquibbleLogo.png`} alt="Squibble Logo" />
       </div>
+      
       <div className="timer">{formatTime(timer)}</div>
+      <div className="archive">
+        <button onClick={onArchiveClick}>Archive</button>
+      </div>
       {isLoggedIn ? (
         <>
           <button onClick={onSignOut}>Sign Out</button>

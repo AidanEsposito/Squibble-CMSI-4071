@@ -5,7 +5,7 @@ import ColorMenu from './ColorMenu';
 import TextOptions from './TextOptions';
 import './Whiteboard.css';
 
-const Whiteboard = ({ texts, setTexts }) => {
+const Whiteboard = ({ texts, setTexts, shouldReset, setShouldReset }) => {
   const [currentColor, setCurrentColor] = useState('#000000');      // Current pen color
   const [brushSize, setBrushSize] = useState(2);                    // Current brush size
   const [tempBrushSize, setTempBrushSize] = useState(brushSize);    // Temporary state for brush size
@@ -56,6 +56,14 @@ const Whiteboard = ({ texts, setTexts }) => {
       }
     ]);
   };
+
+  useEffect(() => {
+    if (shouldReset) {
+      console.log('Resetting whiteboard...');
+      setTexts([]);
+      setShouldReset(false); 
+    }
+  }, [shouldReset, setTexts, setShouldReset]);
 
   return (
     <div className="whiteboard">
