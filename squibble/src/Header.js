@@ -3,10 +3,16 @@ import './Header.css';
 
 const Header = ({ onSignOut, onSignIn, isLoggedIn, brushSize, setBrushSize, currentColor, setCurrentColor }) => {
   const [activeMediaItem, setActiveMediaItem] = useState(null);
+  const [activeSubmenu, setActiveSubmenu] = useState(null);
   const [timer, setTimer] = useState(0);
 
   const handleMediaMenuToggle = (menu) => {
     setActiveMediaItem(activeMediaItem === menu ? null : menu);
+    setActiveSubmenu(null); // Close any active submenu when toggling media menu
+  };
+
+  const handleSubmenuToggle = (submenu) => {
+    setActiveSubmenu(activeSubmenu === submenu ? null : submenu);
   };
 
   useEffect(() => {
@@ -36,13 +42,13 @@ const Header = ({ onSignOut, onSignIn, isLoggedIn, brushSize, setBrushSize, curr
           <button onClick={() => handleMediaMenuToggle('media')}>Media Menu</button>
           {activeMediaItem === 'media' && (
             <div className="media-menu">
-              <button onClick={() => handleMediaMenuToggle('images')}>Images</button>
-              <button onClick={() => handleMediaMenuToggle('gifs')}>Gifs</button>
-              <button onClick={() => handleMediaMenuToggle('drawings')}>Drawings</button>
-              <button onClick={() => handleMediaMenuToggle('postit')}>Post-it Notes</button>
+              <button onClick={() => handleSubmenuToggle('images')}>Images</button>
+              <button onClick={() => handleSubmenuToggle('gifs')}>Gifs</button>
+              <button onClick={() => handleSubmenuToggle('drawings')}>Drawings</button>
+              <button onClick={() => handleSubmenuToggle('postit')}>Post-it Notes</button>
             </div>
           )}
-          {activeMediaItem === 'drawings' && (
+          {activeSubmenu === 'drawings' && (
             <div className="submenu drawing-menu">
               <label>Brush Size: </label>
               <input 

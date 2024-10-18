@@ -267,6 +267,13 @@ const Canvas = ({ currentColor, brushSize, activeTool, lines, setLines, showBoun
     redrawCanvas();
   }, [lines, showBoundingBoxes]);
 
+  useEffect(() => {
+    // Close the text menu if the active tool changes
+    if (activeTool !== 'text') {
+      setIsTextMenuOpen(false);
+    }
+  }, [activeTool]);
+
   return (
     <div
       className="parent-element"
@@ -287,20 +294,24 @@ const Canvas = ({ currentColor, brushSize, activeTool, lines, setLines, showBoun
       />
       
       {isTextMenuOpen && textMenuPosition && (
-        <div
-          style={{
-            position: 'absolute',
-            left: `${textMenuPosition.x}px`,
-            top: `${textMenuPosition.y}px`,
-            backgroundColor: 'white',
-            padding: '10px',
-            border: '1px solid black',
-            borderRadius: '4px',
-          }}
-        >
-          <TextOptions onAddText={handleAddText} />
-        </div>
-      )}
+      <div
+        style={{
+          position: 'absolute',
+          left: `${textMenuPosition.x}px`,
+          top: `${textMenuPosition.y}px`,
+          width: '200px', // Set a fixed width for the text menu
+          backgroundColor: 'white',
+          padding: '10px',
+          border: '1px solid black',
+          borderRadius: '4px',
+          boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)', // Optional, add shadow for better visibility
+        }}
+      >
+        <TextOptions onAddText={handleAddText}
+        selectedColor={currentColor}  // Pass the selected color to the text option
+         />
+      </div>
+    )}
     </div>
   );
 };

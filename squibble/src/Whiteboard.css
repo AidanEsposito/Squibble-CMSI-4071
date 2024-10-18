@@ -94,7 +94,7 @@
   padding: 0;
   cursor: pointer;
   overflow: hidden;
-  transform: translateX(0px) translateY(-0px); /* Adjust this value to center the border correctly */
+  transform: translateX(-.5px) translateY(-0px); /* Adjust this value to center the border correctly */
 }
 
 /* Container for the custom color circle */
@@ -144,5 +144,5 @@
 
 .custom-color-picker::-webkit-color-swatch-wrapper:hover {
   transform: scale(1.2); /* Enlarge slightly on hover */
-  transition: transform 0.2s;
+  transition: transform 2.3s;
 }
