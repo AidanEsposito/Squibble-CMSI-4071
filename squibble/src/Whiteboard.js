@@ -2,19 +2,21 @@ import React, { useRef, useEffect, useState } from 'react';
 import Canvas from './Canvas';
 import ToolTabs from './ToolTabs';
 import ColorMenu from './ColorMenu';
+import TextOptions from './TextOptions';
 import './Whiteboard.css';
 
-const Whiteboard = ({ texts }) => {
+const Whiteboard = ({ texts, setTexts }) => {
   const [currentColor, setCurrentColor] = useState('#000000');      // Current pen color
   const [brushSize, setBrushSize] = useState(2);                    // Current brush size
   const [tempBrushSize, setTempBrushSize] = useState(brushSize);    // Temporary state for brush size
-  const [activeTool, setActiveTool] = useState(null);               // Active tool: 'pen', 'pan', or 'eraser'
+  const [activeTool, setActiveTool] = useState('pen');               // Active tool: 'pen', 'pan', 'eraser', or 'text'
   const [showBoundingBoxes, setShowBoundingBoxes] = useState(false); // Shows bounding boxes of all lines drawn (debug)
   const [lines, setLines] = useState([]);                           // Stores details of all drawn lines
   const [selectedColorIndex, setSelectedColorIndex] = useState(0);  // Track the selected color index
   const [sampleColors, setSampleColors] = useState([                // Colors used for swatches in color menu
     '#000000', '#FF0000', '#00FF00', '#0000FF', '#FFFF00', '#FF00FF', '#00DEAD'
   ]);
+  const [showTextOptions, setShowTextOptions] = useState(false);          // Control visibility of TextMenu
 
   // useEffect to debounce the brush size update
   useEffect(() => {
@@ -45,6 +47,16 @@ const Whiteboard = ({ texts }) => {
     });
   };
 
+  const handleAddText = (textOptions) => {
+    setTexts((prevTexts) => [
+      ...prevTexts,
+      {
+        ...textOptions,
+        position: { x: 100, y: 100 } // Default position, ideally set via user click
+      }
+    ]);
+  };
+
   return (
     <div className="whiteboard">
       <Canvas
@@ -55,6 +67,7 @@ const Whiteboard = ({ texts }) => {
         setLines={setLines}
         showBoundingBoxes={showBoundingBoxes}
       />
+
       <ToolTabs
         activeTool={activeTool}
         setActiveTool={setActiveTool}
@@ -63,13 +76,19 @@ const Whiteboard = ({ texts }) => {
         setShowBoundingBoxes={setShowBoundingBoxes}
         showBoundingBoxes={showBoundingBoxes}
       />
+
       <ColorMenu
         currentColor={currentColor}
         handleSampleColorSelect={handleSampleColorSelect}
         handleCustomColorSelect={handleCustomColorSelect}
         sampleColors={sampleColors}
       />
-      
+
+      {/* Render TextOptions only when the Text Tool is active */}
+      {activeTool === 'text' && (
+        <TextOptions onAddText={handleAddText} />
+      )}
+
       {/* Render the added texts */}
       {texts.map((textObj, index) => (
         <div
@@ -78,8 +97,9 @@ const Whiteboard = ({ texts }) => {
             color: textObj.color,
             fontSize: `${textObj.size}px`,
             fontFamily: textObj.font,
-            position: 'absolute', // You might want to set this to relative or adjust as needed
-            // Adjust positioning logic as needed
+            position: 'absolute',
+            left: textObj.position.x,
+            top: textObj.position.y,
           }}
         >
           {textObj.text}

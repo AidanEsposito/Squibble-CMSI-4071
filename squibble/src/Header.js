@@ -1,23 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import './Header.css';
-import TextOptions from './TextOptions';
 
-const Header = ({ onSignOut, onSignIn, isLoggedIn, onAddText, brushSize, setBrushSize, currentColor, setCurrentColor }) => {
+const Header = ({ onSignOut, onSignIn, isLoggedIn, brushSize, setBrushSize, currentColor, setCurrentColor }) => {
   const [activeMediaItem, setActiveMediaItem] = useState(null);
-  const [showTextOptions, setShowTextOptions] = useState(false);
   const [timer, setTimer] = useState(0);
 
   const handleMediaMenuToggle = (menu) => {
-    if (activeMediaItem === menu) {
-      setActiveMediaItem(null);
-    } else {
-      setActiveMediaItem(menu);
-    }
-  };
-
-  const toggleTextOptions = () => {
-    setShowTextOptions(!showTextOptions);
-    setActiveMediaItem(null);
+    setActiveMediaItem(activeMediaItem === menu ? null : menu);
   };
 
   useEffect(() => {
@@ -25,7 +14,7 @@ const Header = ({ onSignOut, onSignIn, isLoggedIn, onAddText, brushSize, setBrus
       setTimer((prevTime) => (prevTime > 0 ? prevTime - 1 : 0));
     }, 1000);
     return () => clearInterval(interval);
-  }, []); 
+  }, []);
 
   const formatTime = (timeInSeconds) => {
     const days = Math.floor(timeInSeconds / 86400);
@@ -34,7 +23,6 @@ const Header = ({ onSignOut, onSignIn, isLoggedIn, onAddText, brushSize, setBrus
     const seconds = timeInSeconds % 60;
     return `${days}d ${hours}h ${minutes}m ${seconds}s`;
   };
-
 
   return (
     <header>
@@ -48,21 +36,14 @@ const Header = ({ onSignOut, onSignIn, isLoggedIn, onAddText, brushSize, setBrus
           <button onClick={() => handleMediaMenuToggle('media')}>Media Menu</button>
           {activeMediaItem === 'media' && (
             <div className="media-menu">
-              <button onClick={() => handleMediaMenuToggle('text')}>Text</button>
               <button onClick={() => handleMediaMenuToggle('images')}>Images</button>
               <button onClick={() => handleMediaMenuToggle('gifs')}>Gifs</button>
               <button onClick={() => handleMediaMenuToggle('drawings')}>Drawings</button>
               <button onClick={() => handleMediaMenuToggle('postit')}>Post-it Notes</button>
             </div>
           )}
-          {activeMediaItem === 'text' && (
-            <div className="submenu text-menu">
-              <TextOptions onAddText={onAddText} />
-            </div>
-        )}
           {activeMediaItem === 'drawings' && (
             <div className="submenu drawing-menu">
-              {/* Drawing options here */}
               <label>Brush Size: </label>
               <input 
                 type="range" 
@@ -88,5 +69,3 @@ const Header = ({ onSignOut, onSignIn, isLoggedIn, onAddText, brushSize, setBrus
 };
 
 export default Header;
-
-
