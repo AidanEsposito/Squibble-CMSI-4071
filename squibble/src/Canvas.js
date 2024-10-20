@@ -10,45 +10,90 @@ const Canvas = ({ currentColor, brushSize, activeTool, lines, setLines, showBoun
   const [previousPosition, setPreviousPosition] = useState(null);
   const [recentLines, setRecentLines] = useState([]);
 
-  const handleMouseDown = (e) => {
-    if (activeTool === 'pen') {
-      setIsDrawing(true);
-      const { offsetX, offsetY } = e.nativeEvent;
-      setPreviousPosition({ x: offsetX, y: offsetY });
-      setRecentLines([]);
-    } else if (activeTool === 'eraser') {
-      setIsErasing(true);
-      handleErase(e);
-    } else if (activeTool === 'text') {
-      const { offsetX, offsetY } = e.nativeEvent;
-      setTextMenuPosition({ x: offsetX, y: offsetY });
-      setIsTextMenuOpen(true);
+  const [isMarqueeActive, setIsMarqueeActive] = useState(false);
+  const [marqueeStart, setMarqueeStart] = useState(null);
+  const [marqueeEnd, setMarqueeEnd] = useState(null);
+  const [selectedObjects, setSelectedObjects] = useState([]);
+  const [combinedBoundingBox, setCombinedBoundingBox] = useState(null);
+
+  const isManipulatingRef = useRef(false);
+  const previousPositionRef = useRef(null);
+  const selectedObjectsRef = useRef([]);
+  const combinedBoundingBoxRef = useRef(null);
+
+
+const handleMouseDown = (e) => {
+  const { offsetX, offsetY } = e.nativeEvent;
+
+  if (activeTool === 'marquee' && combinedBoundingBox) {
+    if (
+      offsetX >= combinedBoundingBox.minX &&
+      offsetX <= combinedBoundingBox.maxX &&
+      offsetY >= combinedBoundingBox.minY &&
+      offsetY <= combinedBoundingBox.maxY
+    ) {
+      // Start manipulating selected objects
+      isManipulatingRef.current = true;
+      previousPositionRef.current = { x: offsetX, y: offsetY };
+      return;
     }
-  };
+  }
 
-  const handleMouseUp = () => {
-    setIsDrawing(false);
-    setIsErasing(false);
 
-    if (recentLines.length > 2) {
-      const splineCurve = approximateSpline(recentLines);
-      setLines((prevLines) => [...prevLines, splineCurve]);
-    }
-
+  if (activeTool === 'pen') {
+    setIsDrawing(true);
+    setPreviousPosition({ x: offsetX, y: offsetY });
     setRecentLines([]);
-  };
+  } else if (activeTool === 'eraser') {
+    setIsErasing(true);
+    handleErase(e);
+  } else if (activeTool === 'text') {
+    setTextMenuPosition({ x: offsetX, y: offsetY });
+    setIsTextMenuOpen(true);
+  } else if (activeTool === 'marquee') {
+    setIsMarqueeActive(true);
+    setMarqueeStart({ x: offsetX, y: offsetY });
+    setMarqueeEnd({ x: offsetX, y: offsetY });
+  }
+};
+
+
+const handleMouseUp = () => {
+  setIsDrawing(false);
+  setIsErasing(false);
+
+  if (isManipulatingRef.current) {
+    isManipulatingRef.current = false;
+    setPreviousPosition(null);
+    // Update the state after finishing manipulating to force a full re-render
+    setLines([...lines]);
+  }
+
+  if (isMarqueeActive) {
+    setIsMarqueeActive(false);
+    selectObjectsInMarquee();
+  }
+
+  if (recentLines.length > 2) {
+    const splineCurve = approximateSpline(recentLines);
+    setLines((prevLines) => [...prevLines, splineCurve]);
+  }
+
+  setRecentLines([]);
+};
+
 
   const handleMouseMove = (e) => {
     const canvas = canvasRef.current;
     const context = canvas.getContext('2d');
-    
+    const { offsetX, offsetY } = e.nativeEvent;
+  
     if (activeTool === 'pan' && e.buttons === 1) {
       const board = canvas.parentElement;
-      board.scrollLeft -= e.movementX;    // Adjust horizontal scroll
-      board.scrollTop -= e.movementY;     // Adjust vertical scroll
+      board.scrollLeft -= e.movementX; // Adjust horizontal scroll
+      board.scrollTop -= e.movementY; // Adjust vertical scroll
       return; // Prevent other interactions while panning
     } else if (activeTool === 'pen' && isDrawing) {
-      const { offsetX, offsetY } = e.nativeEvent;
       const currentPosition = { x: offsetX, y: offsetY };
   
       if (previousPosition) {
@@ -58,8 +103,103 @@ const Canvas = ({ currentColor, brushSize, activeTool, lines, setLines, showBoun
       }
     } else if (activeTool === 'eraser' && isErasing) {
       handleErase(e);
+    } else if (activeTool === 'marquee' && isMarqueeActive) {
+      setMarqueeEnd({ x: offsetX, y: offsetY });
+    }
+  
+    // Handle manipulating selected objects
+    if (isManipulatingRef.current && e.buttons === 1) {
+      const deltaX = offsetX - previousPositionRef.current.x;
+      const deltaY = offsetY - previousPositionRef.current.y;
+  
+      // Directly update the position of all selected objects by the delta
+      selectedObjectsRef.current.forEach((line) => {
+        if (line.points) {
+          line.points.forEach((point) => {
+            point.x += deltaX;
+            point.y += deltaY;
+          });
+        } else if (line.type === 'text') {
+          line.position.x += deltaX;
+          line.position.y += deltaY;
+        }
+      });
+  
+      // Update marquee bounding box as well
+      if (combinedBoundingBoxRef.current) {
+        combinedBoundingBoxRef.current.minX += deltaX;
+        combinedBoundingBoxRef.current.minY += deltaY;
+        combinedBoundingBoxRef.current.maxX += deltaX;
+        combinedBoundingBoxRef.current.maxY += deltaY;
+      }
+  
+      // Save the updated position for the next frame
+      previousPositionRef.current = { x: offsetX, y: offsetY };
+  
+      // Force a re-render by updating lines at the end of the drag
+      setLines([...lines]);
     }
   };
+
+  const selectObjectsInMarquee = () => {
+    if (marqueeStart && marqueeEnd) {
+      const minX = Math.min(marqueeStart.x, marqueeEnd.x);
+      const minY = Math.min(marqueeStart.y, marqueeEnd.y);
+      const maxX = Math.max(marqueeStart.x, marqueeEnd.x);
+      const maxY = Math.max(marqueeStart.y, marqueeEnd.y);
+
+      const selected = lines.filter((object) => {
+        const { boundingBox } = getBoundingBox(object);
+        return (
+          boundingBox.minX >= minX &&
+          boundingBox.maxX <= maxX &&
+          boundingBox.minY >= minY &&
+          boundingBox.maxY <= maxY
+        );
+      });
+
+      setSelectedObjects(selected);
+
+      // Calculate combined bounding box
+      if (selected.length > 0) {
+        const combinedMinX = Math.min(...selected.map((obj) => getBoundingBox(obj).boundingBox.minX));
+        const combinedMinY = Math.min(...selected.map((obj) => getBoundingBox(obj).boundingBox.minY));
+        const combinedMaxX = Math.max(...selected.map((obj) => getBoundingBox(obj).boundingBox.maxX));
+        const combinedMaxY = Math.max(...selected.map((obj) => getBoundingBox(obj).boundingBox.maxY));
+        setCombinedBoundingBox({ minX: combinedMinX, minY: combinedMinY, maxX: combinedMaxX, maxY: combinedMaxY });
+      } else {
+        setCombinedBoundingBox(null);
+      }
+    }
+  };
+
+  
+  const drawMarquee = (context) => {
+    if (isMarqueeActive && marqueeStart && marqueeEnd) {
+      const { x: startX, y: startY } = marqueeStart;
+      const { x: endX, y: endY } = marqueeEnd;
+
+      context.strokeStyle = 'blue';
+      context.lineWidth = 1;
+      context.setLineDash([5, 5]);
+      context.strokeRect(startX, startY, endX - startX, endY - startY);
+      context.setLineDash([]);
+    }
+  };
+
+
+  const drawSelectedBoundingBox = (context) => {
+    if (combinedBoundingBox) {
+      const { minX, minY, maxX, maxY } = combinedBoundingBox;
+
+      context.strokeStyle = 'blue';
+      context.lineWidth = 2;
+      context.setLineDash([5, 5]);
+      context.strokeRect(minX, minY, maxX - minX, maxY - minY);
+      context.setLineDash([]);
+    }
+  };
+
 
   const drawLine = (context, start, end, color, size) => {
     context.strokeStyle = color;
@@ -122,6 +262,9 @@ const Canvas = ({ currentColor, brushSize, activeTool, lines, setLines, showBoun
         drawBoundingBox(context, object);
       }
     });
+
+    drawMarquee(context);
+    drawSelectedBoundingBox(context);
   };
 
   const drawSpline = (context, spline) => {
@@ -189,6 +332,29 @@ const Canvas = ({ currentColor, brushSize, activeTool, lines, setLines, showBoun
     setLines((prevLines) => [...prevLines, newText]);
     setIsTextMenuOpen(false);
   };
+
+  const getBoundingBox = (object) => {
+    if (object.type === 'spline' || object.type === 'line') {
+      const points = object.points || [object.start, object.end];
+      const minX = Math.min(...points.map((point) => point.x)) - object.size / 2;
+      const minY = Math.min(...points.map((point) => point.y)) - object.size / 2;
+      const maxX = Math.max(...points.map((point) => point.x)) + object.size / 2;
+      const maxY = Math.max(...points.map((point) => point.y)) + object.size / 2;
+      return { boundingBox: { minX, minY, maxX, maxY } };
+    } else if (object.type === 'text') {
+      const { position, width, height } = object;
+      return {
+        boundingBox: {
+          minX: position.x,
+          minY: position.y - height,
+          maxX: position.x + width,
+          maxY: position.y,
+        },
+      };
+    }
+    return { boundingBox: null };
+  };
+
 
   const drawBoundingBox = (context, object) => {
     if (object.type === 'spline') {
@@ -265,7 +431,7 @@ const Canvas = ({ currentColor, brushSize, activeTool, lines, setLines, showBoun
 
   useEffect(() => {
     redrawCanvas();
-  }, [lines, showBoundingBoxes]);
+  }, [lines, showBoundingBoxes, isMarqueeActive, marqueeStart, marqueeEnd, combinedBoundingBox]);
 
   useEffect(() => {
     // Close the text menu if the active tool changes
@@ -273,6 +439,11 @@ const Canvas = ({ currentColor, brushSize, activeTool, lines, setLines, showBoun
       setIsTextMenuOpen(false);
     }
   }, [activeTool]);
+
+  useEffect(() => {
+    selectedObjectsRef.current = selectedObjects;
+    combinedBoundingBoxRef.current = combinedBoundingBox;
+  }, [selectedObjects, combinedBoundingBox]);
 
   return (
     <div

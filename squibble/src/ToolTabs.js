@@ -3,6 +3,14 @@ import React from 'react';
 const ToolTabs = ({ activeTool, setActiveTool, tempBrushSize, setTempBrushSize, setShowBoundingBoxes, showBoundingBoxes }) => {
   return (
     <div className="tool-tabs">
+      {/* Marquee Tool Tab */}
+      <div
+        className={`tool-tab ${activeTool === 'marquee' ? 'active' : ''}`}
+        onClick={() => setActiveTool(activeTool === 'marquee' ? null : 'marquee')}
+      >
+        Marquee Tool
+      </div>
+
       {/* Pen Tool Tab */}
       <div
         className={`tool-tab ${activeTool === 'pen' ? 'active' : ''}`}
@@ -24,14 +32,6 @@ const ToolTabs = ({ activeTool, setActiveTool, tempBrushSize, setTempBrushSize, 
         )}
       </div>
 
-      {/* Pan Tool Tab */}
-      <div
-        className={`tool-tab ${activeTool === 'pan' ? 'active' : ''}`}
-        onClick={() => setActiveTool(activeTool === 'pan' ? null : 'pan')}
-      >
-        Pan Tool
-      </div>
-
       {/* Eraser Tool Tab */}
       <div
         className={`tool-tab ${activeTool === 'eraser' ? 'active' : ''}`}
@@ -40,11 +40,14 @@ const ToolTabs = ({ activeTool, setActiveTool, tempBrushSize, setTempBrushSize, 
         Eraser Tool
       </div>
 
-      {/* Bounding Boxes Toggle */}
-      <div className="tool-tab" onClick={() => setShowBoundingBoxes(!showBoundingBoxes)}>
-        {showBoundingBoxes ? 'Hide Bounding Boxes' : 'Show Bounding Boxes'}
+      {/* Pan Tool Tab */}
+      <div
+        className={`tool-tab ${activeTool === 'pan' ? 'active' : ''}`}
+        onClick={() => setActiveTool(activeTool === 'pan' ? null : 'pan')}
+      >
+        Pan Tool
       </div>
-      
+
       {/* Text Tool Tab */}
       <div
         className={`tool-tab ${activeTool === 'text' ? 'active' : ''}`}
@@ -52,6 +55,12 @@ const ToolTabs = ({ activeTool, setActiveTool, tempBrushSize, setTempBrushSize, 
       >
         Text Tool
       </div>
+
+      {/* Bounding Boxes Toggle */}
+      <div className="tool-tab" onClick={() => setShowBoundingBoxes(!showBoundingBoxes)}>
+        {showBoundingBoxes ? 'Hide Bounding Boxes' : 'Show Bounding Boxes'}
+      </div>
+      
     </div>
   );
 };
