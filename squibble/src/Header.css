@@ -21,9 +21,10 @@ header {
 .timer {
   font-size: 16px;
   align-items: center;
-
+  width: 120px; /* Set a fixed width large enough to fit the maximum value */
+  text-align: center; /* Center the text within the timer box */
+  display: inline-block; /* Ensure it respects the fixed width */
 }
-
 button {
   margin: 0 10px;
   padding: 8px 16px;
