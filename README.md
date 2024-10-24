@@ -1,3 +1,7 @@
 # Squibble-CMSI-4071
 
-Squibble. TO BE EXPANDED SOON
+Squibble Install List
+
+npm install
+npm install balloon-css
+npm install firebase
