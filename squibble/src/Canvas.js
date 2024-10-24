@@ -21,6 +21,8 @@ const Canvas = ({ currentColor, brushSize, activeTool, lines, setLines, showBoun
   const selectedObjectsRef = useRef([]);
   const combinedBoundingBoxRef = useRef(null);
 
+  const [uploadedImages, setUploadedImages] = useState([]);
+
 
 const handleMouseDown = (e) => {
   const { offsetX, offsetY } = e.nativeEvent;
@@ -256,6 +258,8 @@ const handleMouseUp = () => {
         drawSpline(context, object);
       } else if (object.type === 'line') {
         drawLine(context, object.start, object.end, object.color, object.size);
+      } else if (object.type === 'image') {
+        context.drawImage(object.img, object.x, object.y, object.width, object.height);
       }
 
       if (showBoundingBoxes) {
@@ -331,6 +335,30 @@ const handleMouseUp = () => {
     };
     setLines((prevLines) => [...prevLines, newText]);
     setIsTextMenuOpen(false);
+  };
+
+  const handleImageUpload = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const img = new Image();
+        img.src = event.target.result;
+        img.onload = () => {
+          const newImage = {
+            type: 'image',
+            img: img,
+            x: 50, // Default x position
+            y: 50, // Default y position
+            width: img.width / 2, // Scale down for initial render
+            height: img.height / 2
+          };
+          setUploadedImages((prevImages) => [...prevImages, newImage]);
+          setLines((prevLines) => [...prevLines, newImage]);
+        };
+      };
+      reader.readAsDataURL(file);
+    }
   };
 
   const getBoundingBox = (object) => {
@@ -431,7 +459,7 @@ const handleMouseUp = () => {
 
   useEffect(() => {
     redrawCanvas();
-  }, [lines, showBoundingBoxes, isMarqueeActive, marqueeStart, marqueeEnd, combinedBoundingBox]);
+  }, [lines, showBoundingBoxes, isMarqueeActive, marqueeStart, marqueeEnd, combinedBoundingBox, uploadedImages]);
 
   useEffect(() => {
     // Close the text menu if the active tool changes
@@ -452,37 +480,42 @@ const handleMouseUp = () => {
         width: '100vw',
         height: '100vh',
         overflow: 'auto',
-        position: 'relative', // Ensure the container is scrollable
+        position: 'relative',
       }}
     >
+      <input
+        type="file"
+        accept="image/*"
+        onChange={handleImageUpload}
+        style={{ marginBottom: '10px', position: 'absolute', top: '10px', left: '10px', zIndex: 10 }}
+      />
+
       <canvas
         ref={canvasRef}
         onMouseDown={handleMouseDown}
         onMouseUp={handleMouseUp}
         onMouseLeave={handleMouseUp}
         onMouseMove={handleMouseMove}
-className={`drawing-canvas ${activeTool === 'pan' ? 'pan-cursor' : ''} ${activeTool === 'text' ? 'text-cursor' : ''}`}
+        className={`drawing-canvas ${activeTool === 'pan' ? 'pan-cursor' : ''} ${activeTool === 'text' ? 'text-cursor' : ''}`}
       />
-      
+
       {isTextMenuOpen && textMenuPosition && (
-      <div
-        style={{
-          position: 'absolute',
-          left: `${textMenuPosition.x}px`,
-          top: `${textMenuPosition.y}px`,
-          width: '200px', // Set a fixed width for the text menu
-          backgroundColor: 'white',
-          padding: '10px',
-          border: '1px solid black',
-          borderRadius: '4px',
-          boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)', // Optional, add shadow for better visibility
-        }}
-      >
-        <TextOptions onAddText={handleAddText}
-        selectedColor={currentColor}  // Pass the selected color to the text option
-         />
-      </div>
-    )}
+        <div
+          style={{
+            position: 'absolute',
+            left: `${textMenuPosition.x}px`,
+            top: `${textMenuPosition.y}px`,
+            width: '200px',
+            backgroundColor: 'white',
+            padding: '10px',
+            border: '1px solid black',
+            borderRadius: '4px',
+            boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)',
+          }}
+        >
+          <TextOptions onAddText={handleAddText} selectedColor={currentColor} />
+        </div>
+      )}
     </div>
   );
 };
