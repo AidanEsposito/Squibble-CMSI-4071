@@ -22,6 +22,7 @@ const Canvas = ({ currentColor, brushSize, activeTool, lines, setLines, showBoun
   const combinedBoundingBoxRef = useRef(null);
 
   const [uploadedImages, setUploadedImages] = useState([]);
+  const [imagePosition, setImagePosition] = useState(null);
 
 
 const handleMouseDown = (e) => {
@@ -56,6 +57,10 @@ const handleMouseDown = (e) => {
     setIsMarqueeActive(true);
     setMarqueeStart({ x: offsetX, y: offsetY });
     setMarqueeEnd({ x: offsetX, y: offsetY });
+  } else if (activeTool === 'image') {
+    // Set image position where user clicked and open the file picker
+    setImagePosition({ x: offsetX, y: offsetY });
+    document.getElementById('image-upload-input').click();
   }
 };
 
@@ -70,78 +75,79 @@ const handleMouseUp = () => {
     // Update the state after finishing manipulating to force a full re-render
     setLines([...lines]);
   }
-
   if (isMarqueeActive) {
     setIsMarqueeActive(false);
     selectObjectsInMarquee();
   }
-
   if (recentLines.length > 2) {
     const splineCurve = approximateSpline(recentLines);
     setLines((prevLines) => [...prevLines, splineCurve]);
   }
-
   setRecentLines([]);
 };
 
 
-  const handleMouseMove = (e) => {
-    const canvas = canvasRef.current;
-    const context = canvas.getContext('2d');
-    const { offsetX, offsetY } = e.nativeEvent;
-  
-    if (activeTool === 'pan' && e.buttons === 1) {
-      const board = canvas.parentElement;
-      board.scrollLeft -= e.movementX; // Adjust horizontal scroll
-      board.scrollTop -= e.movementY; // Adjust vertical scroll
-      return; // Prevent other interactions while panning
-    } else if (activeTool === 'pen' && isDrawing) {
-      const currentPosition = { x: offsetX, y: offsetY };
-  
-      if (previousPosition) {
-        drawLine(context, previousPosition, currentPosition, currentColor, brushSize);
-        setRecentLines((prevRecentLines) => [...prevRecentLines, currentPosition]);
-        setPreviousPosition(currentPosition);
-      }
-    } else if (activeTool === 'eraser' && isErasing) {
-      handleErase(e);
-    } else if (activeTool === 'marquee' && isMarqueeActive) {
-      setMarqueeEnd({ x: offsetX, y: offsetY });
+const handleMouseMove = (e) => {
+  const canvas = canvasRef.current;
+  const context = canvas.getContext('2d');
+  const { offsetX, offsetY } = e.nativeEvent;
+
+  if (activeTool === 'pan' && e.buttons === 1) {
+    const board = canvas.parentElement;
+    board.scrollLeft -= e.movementX; // Adjust horizontal scroll
+    board.scrollTop -= e.movementY; // Adjust vertical scroll
+    return; // Prevent other interactions while panning
+  } else if (activeTool === 'pen' && isDrawing) {
+    const currentPosition = { x: offsetX, y: offsetY };
+
+    if (previousPosition) {
+      drawLine(context, previousPosition, currentPosition, currentColor, brushSize);
+      setRecentLines((prevRecentLines) => [...prevRecentLines, currentPosition]);
+      setPreviousPosition(currentPosition);
     }
-  
-    // Handle manipulating selected objects
-    if (isManipulatingRef.current && e.buttons === 1) {
-      const deltaX = offsetX - previousPositionRef.current.x;
-      const deltaY = offsetY - previousPositionRef.current.y;
-  
-      // Directly update the position of all selected objects by the delta
-      selectedObjectsRef.current.forEach((line) => {
-        if (line.points) {
-          line.points.forEach((point) => {
-            point.x += deltaX;
-            point.y += deltaY;
-          });
-        } else if (line.type === 'text') {
-          line.position.x += deltaX;
-          line.position.y += deltaY;
-        }
-      });
-  
-      // Update marquee bounding box as well
-      if (combinedBoundingBoxRef.current) {
-        combinedBoundingBoxRef.current.minX += deltaX;
-        combinedBoundingBoxRef.current.minY += deltaY;
-        combinedBoundingBoxRef.current.maxX += deltaX;
-        combinedBoundingBoxRef.current.maxY += deltaY;
+  } else if (activeTool === 'eraser' && isErasing) {
+    handleErase(e);
+  } else if (activeTool === 'marquee' && isMarqueeActive) {
+    setMarqueeEnd({ x: offsetX, y: offsetY });
+  }
+
+  // Handle manipulating selected objects
+  if (isManipulatingRef.current && e.buttons === 1) {
+    const deltaX = offsetX - previousPositionRef.current.x;
+    const deltaY = offsetY - previousPositionRef.current.y;
+
+    // Directly update the position of all selected objects by the delta
+    selectedObjectsRef.current.forEach((line) => {
+      if (line.points) {
+        line.points.forEach((point) => {
+          point.x += deltaX;
+          point.y += deltaY;
+        });
+      } else if (line.type === 'text') {
+        line.position.x += deltaX;
+        line.position.y += deltaY;
+      } else if (line.type === 'image') {
+        line.x += deltaX;
+        line.y += deltaY;
       }
-  
-      // Save the updated position for the next frame
-      previousPositionRef.current = { x: offsetX, y: offsetY };
-  
-      // Force a re-render by updating lines at the end of the drag
-      setLines([...lines]);
+    });
+
+    // Update marquee bounding box as well
+    if (combinedBoundingBoxRef.current) {
+      combinedBoundingBoxRef.current.minX += deltaX;
+      combinedBoundingBoxRef.current.minY += deltaY;
+      combinedBoundingBoxRef.current.maxX += deltaX;
+      combinedBoundingBoxRef.current.maxY += deltaY;
     }
-  };
+
+    // Save the updated position for the next frame
+    previousPositionRef.current = { x: offsetX, y: offsetY };
+
+    // Force a re-render by updating lines at the end of the drag
+    setLines([...lines]);
+  }
+};
+
 
   const selectObjectsInMarquee = () => {
     if (marqueeStart && marqueeEnd) {
@@ -231,8 +237,19 @@ const handleMouseUp = () => {
         return setObjects(object, offsetX, offsetY);
       })
     );
+  
+    // Update selected objects after erasing
+    setSelectedObjects((prevSelected) =>
+      prevSelected.filter((object) => setObjects(object, offsetX, offsetY))
+    );
+  
+    // If no objects are selected after erasing, clear the marquee
+    if (selectedObjects.length === 0) {
+      setCombinedBoundingBox(null);
+    }
     redrawCanvas();
   };
+  
 
   const setObjects = (object, offsetX, offsetY) => {
     if (object.type === 'spline') {
@@ -241,16 +258,19 @@ const handleMouseUp = () => {
       return !checkBoundingBoxCollision(object, offsetX, offsetY);
     } else if (object.type === 'text') {
       return !checkTextCollision(object, offsetX, offsetY);
+    } else if (object.type === 'image') {
+      return !checkImageCollision(object, offsetX, offsetY);
     } else {
       return true;
     }
   };
 
+
   const redrawCanvas = () => {
     const canvas = canvasRef.current;
     const context = canvas.getContext('2d');
     context.clearRect(0, 0, canvas.width, canvas.height);
-
+  
     lines.forEach((object) => {
       if (object.type === 'text') {
         drawText(context, object);
@@ -261,15 +281,16 @@ const handleMouseUp = () => {
       } else if (object.type === 'image') {
         context.drawImage(object.img, object.x, object.y, object.width, object.height);
       }
-
+  
       if (showBoundingBoxes) {
         drawBoundingBox(context, object);
       }
     });
-
+  
     drawMarquee(context);
     drawSelectedBoundingBox(context);
   };
+  
 
   const drawSpline = (context, spline) => {
     const { points, color, size } = spline;
@@ -336,10 +357,11 @@ const handleMouseUp = () => {
     setLines((prevLines) => [...prevLines, newText]);
     setIsTextMenuOpen(false);
   };
+  
 
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
-    if (file) {
+    if (file && imagePosition) {
       const reader = new FileReader();
       reader.onload = (event) => {
         const img = new Image();
@@ -348,18 +370,20 @@ const handleMouseUp = () => {
           const newImage = {
             type: 'image',
             img: img,
-            x: 50, // Default x position
-            y: 50, // Default y position
-            width: img.width / 2, // Scale down for initial render
-            height: img.height / 2
+            x: imagePosition.x - img.width / 2, // Center the image at the selected position
+            y: imagePosition.y - img.height / 2,
+            width: img.width,
+            height: img.height,
           };
           setUploadedImages((prevImages) => [...prevImages, newImage]);
           setLines((prevLines) => [...prevLines, newImage]);
+          setImagePosition(null); // Reset image position after placing the image
         };
       };
       reader.readAsDataURL(file);
     }
   };
+  
 
   const getBoundingBox = (object) => {
     if (object.type === 'spline' || object.type === 'line') {
@@ -379,43 +403,57 @@ const handleMouseUp = () => {
           maxY: position.y,
         },
       };
+    } else if (object.type === 'image') {
+      const { x, y, width, height } = object;
+      return {
+        boundingBox: {
+          minX: x,
+          minY: y,
+          maxX: x + width,
+          maxY: y + height,
+        },
+      };
     }
     return { boundingBox: null };
   };
+  
 
 
   const drawBoundingBox = (context, object) => {
+    let minX, minY, maxX, maxY;
     if (object.type === 'spline') {
-      const minX = Math.min(...object.points.map(point => point.x)) - object.size / 2;
-      const minY = Math.min(...object.points.map(point => point.y)) - object.size / 2;
-      const maxX = Math.max(...object.points.map(point => point.x)) + object.size / 2;
-      const maxY = Math.max(...object.points.map(point => point.y)) + object.size / 2;
-
-      context.strokeStyle = 'red';
-      context.lineWidth = 1;
-      context.setLineDash([5, 5]);
-      context.strokeRect(minX, minY, maxX - minX, maxY - minY);
-      context.setLineDash([]);
+      minX = Math.min(...object.points.map(point => point.x)) - object.size / 2;
+      minY = Math.min(...object.points.map(point => point.y)) - object.size / 2;
+      maxX = Math.max(...object.points.map(point => point.x)) + object.size / 2;
+      maxY = Math.max(...object.points.map(point => point.y)) + object.size / 2;
     } else if (object.type === 'text') {
       const { position, width, height } = object;
-      context.strokeStyle = 'red';
-      context.lineWidth = 1;
-      context.setLineDash([5, 5]);
-      context.strokeRect(position.x, position.y - height, width, height);
-      context.setLineDash([]);
+      minX = position.x;
+      minY = position.y - height;
+      maxX = position.x + width;
+      maxY = position.y;
+    } else if (object.type === 'image') {
+      const { x, y, width, height } = object;
+      minX = x;
+      minY = y;
+      maxX = x + width;
+      maxY = y + height;
     } else if (object.type === 'line') {
-      const minX = Math.min(object.start.x, object.end.x) - object.size / 2;
-      const minY = Math.min(object.start.y, object.end.y) - object.size / 2;
-      const maxX = Math.max(object.start.x, object.end.x) + object.size / 2;
-      const maxY = Math.max(object.start.y, object.end.y) + object.size / 2;
-
-      context.strokeStyle = 'red';
-      context.lineWidth = 1;
-      context.setLineDash([5, 5]);
-      context.strokeRect(minX, minY, maxX - minX, maxY - minY);
-      context.setLineDash([]);
+      minX = Math.min(object.start.x, object.end.x) - object.size / 2;
+      minY = Math.min(object.start.y, object.end.y) - object.size / 2;
+      maxX = Math.max(object.start.x, object.end.x) + object.size / 2;
+      maxY = Math.max(object.start.y, object.end.y) + object.size / 2;
+    } else {
+      return;
     }
+  
+    context.strokeStyle = 'red';
+    context.lineWidth = 1;
+    context.setLineDash([5, 5]);
+    context.strokeRect(minX, minY, maxX - minX, maxY - minY);
+    context.setLineDash([]);
   };
+  
 
   const checkBoundingBoxCollision = (line, offsetX, offsetY) => {
     return (
@@ -445,6 +483,15 @@ const handleMouseUp = () => {
       offsetX <= position.x + width &&
       offsetY >= position.y - height &&
       offsetY <= position.y
+    );
+  };
+
+  const checkImageCollision = (image, offsetX, offsetY) => {
+    return (
+      offsetX >= image.x &&
+      offsetX <= image.x + image.width &&
+      offsetY >= image.y &&
+      offsetY <= image.y + image.height
     );
   };
 
@@ -483,12 +530,16 @@ const handleMouseUp = () => {
         position: 'relative',
       }}
     >
-      <input
-        type="file"
-        accept="image/*"
-        onChange={handleImageUpload}
-        style={{ marginBottom: '10px', position: 'absolute', top: '10px', left: '10px', zIndex: 10 }}
-      />
+      
+    {/* Hidden file input for image upload */}
+    <input
+      type="file"
+      id="image-upload-input"
+      accept="image/*"
+      onChange={handleImageUpload}
+      style={{ display: 'none' }}
+    />
+
 
       <canvas
         ref={canvasRef}

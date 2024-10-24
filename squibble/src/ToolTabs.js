@@ -56,6 +56,14 @@ const ToolTabs = ({ activeTool, setActiveTool, tempBrushSize, setTempBrushSize, 
         Text Tool
       </div>
 
+      {/* Image Tool Tab */}
+      <div
+        className={`tool-tab ${activeTool === 'image' ? 'active' : ''}`}
+        onClick={() => setActiveTool(activeTool === 'image' ? null : 'image')}
+      >
+        Image Tool
+      </div>
+      
       {/* Bounding Boxes Toggle */}
       <div className="tool-tab" onClick={() => setShowBoundingBoxes(!showBoundingBoxes)}>
         {showBoundingBoxes ? 'Hide Bounding Boxes' : 'Show Bounding Boxes'}

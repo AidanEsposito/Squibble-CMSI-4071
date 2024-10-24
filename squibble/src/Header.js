@@ -1,26 +1,28 @@
 import React, { useState, useEffect } from 'react';
 import './Header.css';
+import { SignIn, SignOut, useAuthentication } from './Auth'; // Adjust the path as needed
 
-const Header = ({ 
-  user,
-  onSignOut, 
-  onSignIn, 
-  isLoggedIn, 
-  brushSize, 
-  setBrushSize, 
-  currentColor, 
-  setCurrentColor, 
+const Header = ({
+  brushSize,
+  setBrushSize,
+  currentColor,
+  setCurrentColor,
   onArchiveClick,
   resetWhiteboard,
-  timer, 
-  setTimer 
+  timer,
+  setTimer,
+  setShowBoundingBoxes,
+  showBoundingBoxes,
+  activeTool,
+  setActiveTool
 }) => {
+  const user = useAuthentication();
   const [activeMediaItem, setActiveMediaItem] = useState(null);
   const [activeSubmenu, setActiveSubmenu] = useState(null);
 
   const handleMediaMenuToggle = (menu) => {
     setActiveMediaItem(activeMediaItem === menu ? null : menu);
-    setActiveSubmenu(null); 
+    setActiveSubmenu(null);
   };
 
   const handleSubmenuToggle = (submenu) => {
@@ -31,18 +33,17 @@ const Header = ({
     const interval = setInterval(() => {
       setTimer((prevTime) => {
         if (prevTime > 0) {
-          return prevTime - 1; 
+          return prevTime - 1;
         } else {
           clearInterval(interval);
-          resetWhiteboard(); 
-          //Timer initialized to 5 seconds
-          return 259200; 
+          resetWhiteboard();
+          return 259200; // Timer initialized to 3 days
         }
       });
     }, 1000);
-    
+
     return () => clearInterval(interval);
-  }, [resetWhiteboard]); 
+  }, [resetWhiteboard, setTimer]);
 
   const formatTime = (timeInSeconds) => {
     const days = Math.floor(timeInSeconds / 86400);
@@ -53,18 +54,22 @@ const Header = ({
   };
 
   return (
-    <header>
+    <header className="header">
       <div className="logo" onClick={() => window.location.reload()}>
-        <img src={`${process.env.PUBLIC_URL}/SquibbleLogo.png`} alt="Squibble Logo" />
+        <img
+          src={`${process.env.PUBLIC_URL}/SquibbleLogo.png`}
+          alt="An artistic squirrel says: 'I only paint with the finest nuts!'"
+          data-balloon="An artistic squirrel says: 'I only paint with the finest nuts!'"
+          data-balloon-pos="right"
+        />
       </div>
-      
       <div className="timer">{formatTime(timer)}</div>
       <div className="archive">
         <button onClick={onArchiveClick}>Archive</button>
       </div>
-      {isLoggedIn ? (
+      {user ? (
         <>
-          <button onClick={onSignOut}>Sign Out</button>
+          <SignOut />
           <button onClick={() => handleMediaMenuToggle('media')}>Media Menu</button>
           {activeMediaItem === 'media' && (
             <div className="media-menu">
@@ -77,24 +82,26 @@ const Header = ({
           {activeSubmenu === 'drawings' && (
             <div className="submenu drawing-menu">
               <label>Brush Size: </label>
-              <input 
-                type="range" 
-                min="1" 
-                max="20" 
-                value={brushSize} 
-                onChange={(e) => setBrushSize(e.target.value)} 
+              <input
+                type="range"
+                min="1"
+                max="20"
+                value={brushSize}
+                onChange={(e) => setBrushSize(e.target.value)}
               />
               <label>Color: </label>
-              <input 
-                type="color" 
-                value={currentColor} 
-                onChange={(e) => setCurrentColor(e.target.value)} 
+              <input
+                type="color"
+                value={currentColor}
+                onChange={(e) => setCurrentColor(e.target.value)}
               />
             </div>
           )}
         </>
       ) : (
-        <button onClick={onSignIn}>Sign In</button>
+        <div className="google-signin-container">
+          <SignIn />
+        </div>
       )}
     </header>
   );

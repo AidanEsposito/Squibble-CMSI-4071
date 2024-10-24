@@ -72,7 +72,7 @@ function App() {
             currentColor={currentColor} 
             resetWhiteboard={resetWhiteboard}
           />
-          {!user ? <SignIn /> : <SignOut />}
+          {/* {!user ? <SignIn /> : <SignOut />} */}
         </>
       )}
     </div>
