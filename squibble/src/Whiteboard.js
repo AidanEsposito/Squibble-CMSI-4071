@@ -32,6 +32,9 @@ const Whiteboard = ({ texts, setTexts, shouldReset, setShouldReset }) => {
   const handleSampleColorSelect = (color, index) => {
     setCurrentColor(color);
     setSelectedColorIndex(index);
+    if (activeTool != 'text') {
+    setActiveTool('pen');
+    }
   };
 
   // Handle color selection from the custom color picker

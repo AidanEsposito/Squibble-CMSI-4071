@@ -20,7 +20,7 @@ const ColorMenu = ({ currentColor, handleSampleColorSelect, handleCustomColorSel
     {/* Custom Color Picker with Rainbow Border */}
     <div className="custom-color-container">
       <div className="rainbow-border"></div>
-      <div className="balloon-wrapper" aria-label= "Custom Color" data-balloon-pos="left">
+      <div className="balloon-wrapper" aria-label= "Choose custom color" data-balloon-pos="left">
         <input
           type="color"
           value={currentColor}
