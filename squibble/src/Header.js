@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './Header.css';
+import "balloon-css";
 import { SignIn, SignOut, useAuthentication } from './Auth.js'; // Adjust the path as needed
 
 const Header = ({
@@ -55,13 +56,11 @@ const Header = ({
 
   return (
     <header className="header">
-      <div className="logo" onClick={() => window.location.reload()}>
-        <img
-          src={`${process.env.PUBLIC_URL}/SquibbleLogo.png`}
-          alt="An artistic squirrel says: 'I only paint with the finest nuts!'"
-          data-balloon="An artistic squirrel says: 'I only paint with the finest nuts!'"
-          data-balloon-pos="right"
-        />
+      <div className="logo" 
+      aria-label="An artistic squirrel says: 'I only paint with the finest nuts!'"
+      data-balloon-pos="right"
+      onClick={() => window.location.reload()}>
+        <img src={`${process.env.PUBLIC_URL}/SquibbleLogo.png`}/>
       </div>
       <div className="timer">{formatTime(timer)}</div>
       <div className="archive">
