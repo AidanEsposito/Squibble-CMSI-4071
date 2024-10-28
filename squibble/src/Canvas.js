@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useState } from 'react';
-import TextOptions from './TextOptions';
+import TextOptions from './TextOptions.js';
 
 const Canvas = ({ currentColor, brushSize, activeTool, lines, setLines, showBoundingBoxes }) => {
   const canvasRef = useRef(null);

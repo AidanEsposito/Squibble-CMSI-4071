@@ -19,3 +19,4 @@ const storage = getStorage(app);
 
 // Export the auth and storage objects
 export { auth, storage };
+export default app;

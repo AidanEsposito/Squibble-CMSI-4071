@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './Header.css';
-import { SignIn, SignOut, useAuthentication } from './Auth'; // Adjust the path as needed
+import { SignIn, SignOut, useAuthentication } from './Auth.js'; // Adjust the path as needed
 
 const Header = ({
   brushSize,

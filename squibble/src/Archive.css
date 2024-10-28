@@ -1,27 +1,61 @@
 /* Archive.css */
+
 .archive-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background-color: #f0f0f0; /* Light background for the header */
-  padding: 20px;
-  border-bottom: 2px solid #ccc; /* Optional: add a bottom border */
+  background-color: rgb(9, 179, 235); /* Match header background color */
+  color: #fff; /* White text for contrast */
+  padding: 10px; /* Match header padding */
+  border-bottom: 2px solid #007bff; /* Optional: add a bottom border */
 }
 
 .archive-header h1 {
   margin: 0;
-  font-size: 24px; /* Adjust font size as needed */
+  font-size: 24px; /* Keep the same font size */
 }
 
 .back-button {
-  background-color: #007bff; /* Blue button background */
-  color: white; /* White text */
+  background-color: #555; /* Match button style in header */
+  color: #fff; /* White text */
   border: none;
   border-radius: 5px; /* Rounded corners */
-  padding: 10px 15px;
+  padding: 8px 16px; /* Adjust padding to match header button */
   cursor: pointer;
+  transition: background-color 0.3s; /* Smooth transition for hover effect */
 }
 
 .back-button:hover {
-  background-color: #0056b3; /* Darker blue on hover */
+  background-color: #777; /* Darker shade on hover to match header button */
 }
+
+.screenshot-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* Responsive grid layout */
+  gap: 15px; /* Spacing between items */
+  margin-top: 20px; /* Space above the grid */
+}
+
+.screenshot-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Center items within the grid */
+  background-color: #fff; /* White background for screenshots */
+  border-radius: 8px; /* Rounded corners */
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+  padding: 10px; /* Padding around the item */
+}
+
+.screenshot-item img {
+  width: 100%; /* Responsive image */
+  height: auto; /* Maintain aspect ratio */
+  border-radius: 5px; /* Rounded corners for images */
+}
+
+.date {
+  margin-top: 5px; /* Space above the date */
+  font-size: 0.9em; /* Smaller font size for the date */
+  color: #666; /* Gray color for the date text */
+  text-align: center; /* Center the date text */
+}
+

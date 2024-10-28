@@ -1,8 +1,8 @@
 import React, { useRef, useEffect, useState } from 'react';
-import Canvas from './Canvas';
-import ToolTabs from './ToolTabs';
-import ColorMenu from './ColorMenu';
-import TextOptions from './TextOptions';
+import Canvas from './Canvas.js';
+import ToolTabs from './ToolTabs.js';
+import ColorMenu from './ColorMenu.js';
+import TextOptions from './TextOptions.js';
 import './Whiteboard.css';
 
 const Whiteboard = ({ texts, setTexts, shouldReset, setShouldReset }) => {
