@@ -8,7 +8,7 @@ const ToolTabs = ({ activeTool, setActiveTool, tempBrushSize, setTempBrushSize, 
         className={`tool-tab ${activeTool === 'marquee' ? 'active' : ''}`}
         onClick={() => setActiveTool(activeTool === 'marquee' ? null : 'marquee')}
       >
-        Marquee Tool
+        ✂️ Select {/* Marquee Tool Emoji */}
       </div>
 
       {/* Pen Tool Tab */}
@@ -16,7 +16,7 @@ const ToolTabs = ({ activeTool, setActiveTool, tempBrushSize, setTempBrushSize, 
         className={`tool-tab ${activeTool === 'pen' ? 'active' : ''}`}
         onClick={() => setActiveTool(activeTool === 'pen' ? null : 'pen')}
       >
-        Pen Tool
+        ✏️ Pen {/* Pen Tool Emoji */}
         {activeTool === 'pen' && ( // Only show brush size when Pen Tool is active
           <div className="tool-options">
             <label>Brush Size: </label>
@@ -37,7 +37,7 @@ const ToolTabs = ({ activeTool, setActiveTool, tempBrushSize, setTempBrushSize, 
         className={`tool-tab ${activeTool === 'eraser' ? 'active' : ''}`}
         onClick={() => setActiveTool(activeTool === 'eraser' ? null : 'eraser')}
       >
-        Eraser Tool
+        🧽 Erase {/* Eraser Tool Emoji */}
       </div>
 
       {/* Pan Tool Tab */}
@@ -45,7 +45,7 @@ const ToolTabs = ({ activeTool, setActiveTool, tempBrushSize, setTempBrushSize, 
         className={`tool-tab ${activeTool === 'pan' ? 'active' : ''}`}
         onClick={() => setActiveTool(activeTool === 'pan' ? null : 'pan')}
       >
-        Pan Tool
+        🖐️ Pan {/* Pan Tool Emoji */}
       </div>
 
       {/* Text Tool Tab */}
@@ -53,7 +53,7 @@ const ToolTabs = ({ activeTool, setActiveTool, tempBrushSize, setTempBrushSize, 
         className={`tool-tab ${activeTool === 'text' ? 'active' : ''}`}
         onClick={() => setActiveTool(activeTool === 'text' ? null : 'text')}
       >
-        Text Tool
+        📝 Add Text {/* Text Tool Emoji */}
       </div>
 
       {/* Image Tool Tab */}
@@ -61,14 +61,13 @@ const ToolTabs = ({ activeTool, setActiveTool, tempBrushSize, setTempBrushSize, 
         className={`tool-tab ${activeTool === 'image' ? 'active' : ''}`}
         onClick={() => setActiveTool(activeTool === 'image' ? null : 'image')}
       >
-        Image Tool
+        🖼️ Add Image{/* Image Tool Emoji */}
       </div>
       
       {/* Bounding Boxes Toggle */}
       <div className="tool-tab" onClick={() => setShowBoundingBoxes(!showBoundingBoxes)}>
-        {showBoundingBoxes ? 'Hide Bounding Boxes' : 'Show Bounding Boxes'}
+        {showBoundingBoxes ? '👁️‍🗨️ Hide Bounding Boxes' : '🔲 Show Bounding Boxes'} {/* Bounding Boxes Toggle */}
       </div>
-      
     </div>
   );
 };

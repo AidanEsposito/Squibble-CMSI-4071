@@ -520,6 +520,28 @@ const handleMouseMove = (e) => {
     combinedBoundingBoxRef.current = combinedBoundingBox;
   }, [selectedObjects, combinedBoundingBox]);
 
+  useEffect(() => {
+    // Add a keydown event listener to detect the delete key
+    const handleKeyDown = (event) => {
+      if (event.key === 'Delete' && selectedObjects.length > 0) {
+        // Remove all selected objects from the lines state
+        setLines((prevLines) => prevLines.filter(line => !selectedObjects.includes(line)));
+        // Clear the selection
+        setSelectedObjects([]);
+        setCombinedBoundingBox(null);
+      }
+    };
+
+    // Attach the event listener
+    window.addEventListener('keydown', handleKeyDown);
+
+    // Clean up the event listener on component unmount
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [selectedObjects, setLines]);
+
+
   return (
     <div
       className="parent-element"

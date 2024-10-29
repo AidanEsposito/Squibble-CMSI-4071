@@ -50,6 +50,28 @@ const Whiteboard = ({ texts, setTexts, shouldReset, setShouldReset }) => {
     });
   };
 
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      if (event.key >= '1' && event.key <= '9') {
+        const colorIndex = parseInt(event.key, 10) - 1; // Get the index for sampleColors (0 to 8)
+        if (colorIndex < sampleColors.length) {
+          handleSampleColorSelect(sampleColors[colorIndex], colorIndex);
+        }
+      } else if (event.key === '0') {
+        // Set color 10 for the "0" key
+        if (sampleColors.length >= 10) {
+          handleSampleColorSelect(sampleColors[9], 9);
+        }
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [sampleColors]);
+
   const handleAddText = (textOptions) => {
     setTexts((prevTexts) => [
       ...prevTexts,
