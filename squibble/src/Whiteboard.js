@@ -32,7 +32,7 @@ const Whiteboard = ({ texts, setTexts, shouldReset, setShouldReset }) => {
   const handleSampleColorSelect = (color, index) => {
     setCurrentColor(color);
     setSelectedColorIndex(index);
-    if (activeTool != 'text') {
+    if (activeTool !== 'text') {
     setActiveTool('pen');
     }
   };
@@ -50,27 +50,29 @@ const Whiteboard = ({ texts, setTexts, shouldReset, setShouldReset }) => {
     });
   };
 
-  useEffect(() => {
+ useEffect(() => {
     const handleKeyDown = (event) => {
-      if (event.key >= '1' && event.key <= '9') {
-        const colorIndex = parseInt(event.key, 10) - 1; // Get the index for sampleColors (0 to 8)
-        if (colorIndex < sampleColors.length) {
-          handleSampleColorSelect(sampleColors[colorIndex], colorIndex);
-        }
-      } else if (event.key === '0') {
-        // Set color 10 for the "0" key
-        if (sampleColors.length >= 10) {
-          handleSampleColorSelect(sampleColors[9], 9);
+      // Only switch colors if the active tool is not 'text'
+      if (activeTool !== 'text') {
+        const key = event.key;
+        // Check if the key is a number between '1' and '9' for switching colors
+        if (key >= '1' && key <= '9') {
+          const colorIndex = parseInt(key) - 1;
+          if (colorIndex < sampleColors.length) {
+            handleSampleColorSelect(sampleColors[colorIndex], colorIndex);
+          }
         }
       }
     };
 
+    // Attach the event listener
     window.addEventListener('keydown', handleKeyDown);
 
+    // Cleanup function to remove the event listener when the component unmounts
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [sampleColors]);
+  }, [activeTool, sampleColors]);
 
   const handleAddText = (textOptions) => {
     setTexts((prevTexts) => [
