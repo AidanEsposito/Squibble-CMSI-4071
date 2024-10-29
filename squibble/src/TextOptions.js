@@ -33,6 +33,20 @@ const TextOptions = ({ onAddText, selectedColor }) => {
     setSize(selectedSize);
   };
 
+  const handleEnterKey = (event) => {
+    if (event.key === 'Enter') {
+      if (text.trim() === '') return;
+      onAddText({ text, color, size, font });
+    }
+  };
+
+  useEffect(() => {
+    window.addEventListener('keydown', handleEnterKey);
+    return () => {
+      window.removeEventListener('keydown', handleEnterKey);
+    };
+  }, [text, color, size, font]);
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', width: '100%' }}>
       {/* Text Input */}

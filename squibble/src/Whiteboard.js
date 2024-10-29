@@ -16,7 +16,7 @@ const Whiteboard = ({ texts, setTexts, shouldReset, setShouldReset }) => {
   const [sampleColors, setSampleColors] = useState([                // Colors used for swatches in color menu
     '#000000', '#FF0000', '#00FF00', '#0000FF', '#FFFF00', '#FF00FF', '#00DEAD'
   ]);
-  const [showTextOptions, setShowTextOptions] = useState(false);          // Control visibility of TextMenu
+  const [isTextMenuOpen, setIsTextMenuOpen] = useState(false);      // Track if the TextOptions menu is open
 
   // useEffect to debounce the brush size update
   useEffect(() => {
@@ -32,10 +32,13 @@ const Whiteboard = ({ texts, setTexts, shouldReset, setShouldReset }) => {
   const handleSampleColorSelect = (color, index) => {
     setCurrentColor(color);
     setSelectedColorIndex(index);
-    if (activeTool !== 'text') {
-    setActiveTool('pen');
+    
+    // Only switch the active tool if the text menu is not open
+    if (!isTextMenuOpen) {
+      setActiveTool('pen');
     }
   };
+  
 
   // Handle color selection from the custom color picker
   const handleCustomColorSelect = (e) => {
@@ -50,29 +53,29 @@ const Whiteboard = ({ texts, setTexts, shouldReset, setShouldReset }) => {
     });
   };
 
- useEffect(() => {
+  useEffect(() => {
     const handleKeyDown = (event) => {
-      // Only switch colors if the active tool is not 'text'
-      if (activeTool !== 'text') {
-        const key = event.key;
-        // Check if the key is a number between '1' and '9' for switching colors
-        if (key >= '1' && key <= '9') {
-          const colorIndex = parseInt(key) - 1;
-          if (colorIndex < sampleColors.length) {
-            handleSampleColorSelect(sampleColors[colorIndex], colorIndex);
-          }
+      // Prevent color change if the text menu is open (user typing text)
+      if (isTextMenuOpen) {
+        return;
+      }
+      const key = event.key;
+      // Check if the key is a number between '1' and '9' for switching colors
+      if (key >= '1' && key <= '9') {
+        const colorIndex = parseInt(key) - 1;
+        if (colorIndex < sampleColors.length) {
+          handleSampleColorSelect(sampleColors[colorIndex], colorIndex);
         }
       }
     };
-
     // Attach the event listener
     window.addEventListener('keydown', handleKeyDown);
-
     // Cleanup function to remove the event listener when the component unmounts
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [activeTool, sampleColors]);
+  }, [sampleColors, isTextMenuOpen]);
+  
 
   const handleAddText = (textOptions) => {
     setTexts((prevTexts) => [
@@ -101,6 +104,8 @@ const Whiteboard = ({ texts, setTexts, shouldReset, setShouldReset }) => {
         lines={lines}
         setLines={setLines}
         showBoundingBoxes={showBoundingBoxes}
+        isTextMenuOpen={isTextMenuOpen}
+        setIsTextMenuOpen={setIsTextMenuOpen} // Pass these down to Canvas
       />
 
       <ToolTabs

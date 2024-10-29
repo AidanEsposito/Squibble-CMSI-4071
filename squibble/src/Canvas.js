@@ -1,11 +1,10 @@
 import React, { useRef, useEffect, useState } from 'react';
 import TextOptions from './TextOptions.js';
 
-const Canvas = ({ currentColor, brushSize, activeTool, lines, setLines, showBoundingBoxes }) => {
+const Canvas = ({ currentColor, brushSize, activeTool, lines, setLines, showBoundingBoxes, isTextMenuOpen, setIsTextMenuOpen }) => {
   const canvasRef = useRef(null);
   const [isDrawing, setIsDrawing] = useState(false);
   const [isErasing, setIsErasing] = useState(false);
-  const [isTextMenuOpen, setIsTextMenuOpen] = useState(false);
   const [textMenuPosition, setTextMenuPosition] = useState(null);
   const [previousPosition, setPreviousPosition] = useState(null);
   const [recentLines, setRecentLines] = useState([]);
