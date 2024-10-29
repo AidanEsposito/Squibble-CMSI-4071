@@ -23,6 +23,8 @@ const Canvas = ({ currentColor, brushSize, activeTool, lines, setLines, showBoun
   const [uploadedImages, setUploadedImages] = useState([]);
   const [imagePosition, setImagePosition] = useState(null);
 
+  const [objectsToRedo, setObjectsToRedo] = useState([]);
+
 
 const handleMouseDown = (e) => {
   const { offsetX, offsetY } = e.nativeEvent;
@@ -540,6 +542,64 @@ const handleMouseMove = (e) => {
     };
   }, [selectedObjects, setLines]);
 
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      if ((event.ctrlKey || event.metaKey) && event.key === 'z') {
+        event.preventDefault(); // Prevent default browser undo behavior
+
+        // Handle Undo
+        setLines((prevLines) => {
+          if (prevLines.length > 0) {
+            const lastObject = prevLines[prevLines.length - 1];
+            setObjectsToRedo((prevRedo) => [lastObject, ...prevRedo]);
+
+            // Log state after undo
+            console.log('Undo action:');
+            console.log('lines:', prevLines.slice(0, -1));
+
+            return prevLines.slice(0, -1);
+          }
+          return prevLines;
+        });
+      }
+
+      if ((event.ctrlKey || event.metaKey) && event.key === 'y') {
+        event.preventDefault(); // Prevent default browser redo behavior
+
+        // Handle Redo
+        setObjectsToRedo((prevRedo) => {
+          if (prevRedo.length > 0) {
+            const objectToRedo = prevRedo[0];
+            setLines((prevLines) => {
+              // Only add back the object if it isn't already there (prevent duplicate)
+              if (!prevLines.includes(objectToRedo)) {
+                const updatedLines = [...prevLines, objectToRedo];
+
+                // Log state after redo
+                console.log('Redo action:');
+                console.log('lines:', updatedLines);
+                console.log('objectsToRedo:', prevRedo.slice(1));
+
+                return updatedLines;
+              }
+              return prevLines;
+            });
+            return prevRedo.slice(1);
+          }
+          return prevRedo;
+        });
+      }
+    };
+  
+    // Attach the event listener
+    window.addEventListener('keydown', handleKeyDown);
+  
+    // Cleanup function to remove the event listener when the component unmounts
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [setLines]);
+  
 
   return (
     <div
