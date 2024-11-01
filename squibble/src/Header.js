@@ -60,7 +60,7 @@ const Header = ({
       aria-label="An artistic squirrel says: 'I only paint with the finest nuts!'"
       data-balloon-pos="right"
       onClick={() => window.location.reload()}>
-        <img src={`${process.env.PUBLIC_URL}/SquibbleLogo.png`}/>
+        <img src={`${process.env.PUBLIC_URL}/SquibbleLogo.png`} alt ='Squibble logo'/>
       </div>
       <div className="timer">{formatTime(timer)}</div>
       <div className="archive">

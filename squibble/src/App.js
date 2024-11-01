@@ -13,8 +13,6 @@ function App() {
   const [showArchive, setShowArchive] = useState(false); 
   const [timer, setTimer] = useState(259200); // Ensure this is intended
   const isLoggedIn = !!user;
-  const onSignIn = SignIn();
-  const onSignOut = SignOut();
 
   const onAddText = (textOptions) => {
     setTexts((prevTexts) => [
