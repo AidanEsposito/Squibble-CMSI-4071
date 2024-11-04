@@ -77,6 +77,10 @@ When signed out on Squibble, the user will have access to the following options:
 
 When signed in on Squibble, the user will have access to the following options:
 
+* Click the "Sign Out" button to log out of the website
+
+* Anything of the above in the "Signed Out" section (Except Sign In)
+
 * Use the taskbar on the right side of the screen to add the following media to the board:
 
 - Drawings
@@ -87,11 +91,7 @@ When signed in on Squibble, the user will have access to the following options:
   
 - Gifs
   
-- Post-it Notes:
-
-* Click the "Sign Out" button to log out of the website
-
-* Anything of the above in the "Signed Out" section (Except Sign In)
+- Post-it Notes
 
 Each media can be described as the following:
 
