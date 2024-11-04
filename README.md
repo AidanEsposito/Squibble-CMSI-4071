@@ -71,7 +71,7 @@ When signed out on Squibble, the user will have access to the following options:
 
 * Click on the "Sign in with Google" button to enter the SIGNED IN category.
 
-![Header-Sign out]()
+![Header-Sign out](https://github.com/AidanEsposito/Squibble-CMSI-4071/blob/main/Images/signed_out.png)
 
 ## __SIGNED IN__
 
@@ -89,7 +89,7 @@ When signed in on Squibble, the user will have access to the following options:
   
 - Post-it Notes:
 
-![Task Bar]()
+![Task Bar](https://github.com/AidanEsposito/Squibble-CMSI-4071/blob/main/Images/task_bar.png)
 
 Each media can be described as the following:
 
@@ -103,7 +103,7 @@ Each media can be described as the following:
 
 * Use the color wheel on the bottom of the bar to select a more detailed color
 
-![Pen-Menu]()
+![Pen-Menu](https://github.com/AidanEsposito/Squibble-CMSI-4071/blob/main/Images/pen_menu.png)
 
 ### Text ###
 
@@ -121,7 +121,7 @@ Each media can be described as the following:
 
 * Click the blue "Add Text" box in the submenu to add it to the whiteboard
 
-![Text-Menu]()
+![Text-Menu](https://github.com/AidanEsposito/Squibble-CMSI-4071/blob/main/Images/Text_menu.png)
 
 ### Images ###
 
@@ -147,7 +147,9 @@ Each media can be described as the following:
 
 - Hide Bounding Boxes: Hides bounding boxes shown by clicked "Show Bounding Boxes"
 
-![Header Sign In]()
+![Bounding Boxes](https://github.com/AidanEsposito/Squibble-CMSI-4071/blob/main/Images/Show_bounding_box.png)
+
+![Header Sign In](https://github.com/AidanEsposito/Squibble-CMSI-4071/blob/main/Images/signed_in.png)
 
 ## Archive Page ##
 
@@ -157,7 +159,7 @@ On the archive page a user will be able to do the following:
 
 - Scroll up and down the page to view past whiteboards with dates attached
 
-![Archive Page]()
+![Archive Page](https://github.com/AidanEsposito/Squibble-CMSI-4071/blob/main/Images/archive.png)
 
 
 
