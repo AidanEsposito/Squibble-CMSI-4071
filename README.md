@@ -1,6 +1,6 @@
 # Squibble CMSI 4071 User Guide
 
-<u>Installation Guide<u>
+<h1>Installation Guide<h1>
 
 To use Squibble as a basic user, you can visit the website provided at the link below:
 
