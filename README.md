@@ -89,6 +89,10 @@ When signed in on Squibble, the user will have access to the following options:
   
 - Post-it Notes:
 
+* Click the "Sign Out" button to log out of the website
+
+* Anything of the above in the "Signed Out" section (Except Sign In)
+
 Each media can be described as the following:
 
 ### Drawings ###
