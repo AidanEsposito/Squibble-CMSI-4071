@@ -147,6 +147,8 @@ Each media can be described as the following:
 
 - Hide Bounding Boxes: Hides bounding boxes shown by clicked "Show Bounding Boxes"
 
+![Header Sign In]()
+
 ## Archive Page ##
 
 On the archive page a user will be able to do the following:
@@ -154,6 +156,8 @@ On the archive page a user will be able to do the following:
 - Click the back button to return to the current whiteboard
 
 - Scroll up and down the page to view past whiteboards with dates attached
+
+![Archive Page]()
 
 
 
