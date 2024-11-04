@@ -89,8 +89,6 @@ When signed in on Squibble, the user will have access to the following options:
   
 - Post-it Notes:
 
-![Task Bar](https://github.com/AidanEsposito/Squibble-CMSI-4071/blob/main/Images/task_bar.png)
-
 Each media can be described as the following:
 
 ### Drawings ###
