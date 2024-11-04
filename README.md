@@ -1,6 +1,6 @@
 # Squibble CMSI 4071 User Guide
 
-#Installation Guide
+#[Installation Guide]
 
 To use Squibble as a basic user, you can visit the website provided at the link below:
 
@@ -45,7 +45,7 @@ This will provide a link to clone in either HTTPS or SSH that will copy to your 
 * npm test __file_name__
 
 
-#Unstallation Guide
+#[Unstallation Guide]
 
 1. __To stop npm start from running simply use the following:__
 
@@ -55,7 +55,7 @@ This will provide a link to clone in either HTTPS or SSH that will copy to your 
 
 * rm Squibble-CMSI-4071
 
-#Feature + Software User Guide
+#[Feature + Software User Guide]
 
   
 
