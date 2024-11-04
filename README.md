@@ -163,7 +163,7 @@ On the archive page a user will be able to do the following:
 
 Currently there are no major problems found with Squibble that need troubleshooting advice (Most likely will change)
 
-# Contact Support $
+# Contact Support #
 
 If any specific contact is needed for the application please email the emails associated with these github accounts:
 
