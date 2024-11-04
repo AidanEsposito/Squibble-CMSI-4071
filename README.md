@@ -149,7 +149,7 @@ Each media can be described as the following:
 
 ![Header Sign In](https://github.com/AidanEsposito/Squibble-CMSI-4071/blob/main/Images/signed_in.png)
 
-## Archive Page ##
+## __Archive Page__ ##
 
 On the archive page a user will be able to do the following:
 
