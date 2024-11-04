@@ -159,6 +159,22 @@ On the archive page a user will be able to do the following:
 
 ![Archive Page](https://github.com/AidanEsposito/Squibble-CMSI-4071/blob/main/Images/archive.png)
 
+# Troubleshooting Techniques #
+
+Currently there are no major problems found with Squibble that need troubleshooting advice (Most likely will change)
+
+# Contact Support $
+
+If any specific contact is needed for the application please email the emails associated with these github accounts:
+
+* alexgordon11 (Alex Gordon)
+
+* MatthewSavitt (Matt Savitt)
+
+* P-Jaz (Parker Jazayeri)
+
+* AidanEsposito (Aidan Esposito)
+
 
 
   
