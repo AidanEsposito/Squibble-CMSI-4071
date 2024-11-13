@@ -1,6 +1,16 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
-const ToolTabs = ({ activeTool, setActiveTool, tempBrushSize, setTempBrushSize, setShowBoundingBoxes, showBoundingBoxes }) => {
+const ToolTabs = ({ activeTool, setActiveTool, brushSize, tempBrushSize, setTempBrushSize, setBrushSize, setShowBoundingBoxes, showBoundingBoxes }) => {
+  // useEffect to debounce the brush size update
+  useEffect(() => {
+    const debounceTimer = setTimeout(() => {
+      setBrushSize(tempBrushSize); // Set the actual brush size after a delay (saves resources)
+    }, 300);
+
+    // Cleanup function to clear the timeout if the component re-renders
+    return () => clearTimeout(debounceTimer);
+  }, [tempBrushSize, setBrushSize]);
+
   return (
     <div className="tool-tabs">
       {/* Marquee Tool Tab */}
@@ -63,7 +73,7 @@ const ToolTabs = ({ activeTool, setActiveTool, tempBrushSize, setTempBrushSize, 
       >
         🖼️ Add Image{/* Image Tool Emoji */}
       </div>
-      
+
       {/* Bounding Boxes Toggle */}
       <div className="tool-tab" onClick={() => setShowBoundingBoxes(!showBoundingBoxes)}>
         {showBoundingBoxes ? '👁️‍🗨️ Hide Bounding Boxes' : '🔲 Show Bounding Boxes'} {/* Bounding Boxes Toggle */}

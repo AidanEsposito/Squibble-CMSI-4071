@@ -40,8 +40,8 @@ const Whiteboard = ({ texts, setTexts, shouldReset, setShouldReset }) => {
   // Add event listeners to track user activity near the right edge of the screen
   useEffect(() => {
     const handleMouseMove = (e) => {
-      // Only show the panel if the cursor is in the rightmost 2% of the screen width
-      if (e.clientX >= window.innerWidth * 0.98) {
+      // Only show the panel if the cursor is in the rightmost 1% of the screen width
+      if (e.clientX >= window.innerWidth * 0.99) {
         setSidePanelVisible(true);
         resetSidePanelTimeout();
       }
@@ -158,8 +158,10 @@ const Whiteboard = ({ texts, setTexts, shouldReset, setShouldReset }) => {
         <ToolTabs
           activeTool={activeTool}
           setActiveTool={setActiveTool}
+          brushSize={brushSize}
           tempBrushSize={tempBrushSize}
           setTempBrushSize={setTempBrushSize}
+          setBrushSize={setBrushSize} // Pass setBrushSize
           setShowBoundingBoxes={setShowBoundingBoxes}
           showBoundingBoxes={showBoundingBoxes}
         />
