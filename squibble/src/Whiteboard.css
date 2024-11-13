@@ -2,7 +2,7 @@
   position: relative;
   width: 100%;
   height: 100vh;
-  overflow: auto; /* Allow scrolling for the larger canvas */
+  overflow: hidden; /* Allow scrolling for the larger canvas */
   background-color: #f0f0f0; /* Optional: makes the canvas area stand out */
 }
 
@@ -10,6 +10,63 @@
   position: absolute;
   top: 0;
   left: 0;
+}
+
+/* Hover Hitbox for Triggering Side Panel */
+.hover-hitbox {
+  position: fixed;
+  top: 1000px; /* Aligns perfectly below the header */
+  right: 0;
+  width: 2%; /* The hitbox occupies only the rightmost 2% of the screen */
+  height: calc(100% - 60px); /* Adjust height to start below the header */
+  background: transparent; /* Invisible */
+  z-index: 1; /* Ensure it's below other UI elements */
+  pointer-events: auto; /* Allow interaction for hover detection */
+}
+
+/* Side Panel */
+.side-panel {
+  position: fixed;
+  top: 86px; /* Align perfectly below the header */
+  right: 0;
+  width: 150px; /* Width of the side panel */
+  height: calc(100% - 60px); /* Adjust height to start below the header */
+  background: none;
+  box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.6); /* Large drop shadow for visibility */
+  transition: transform 0.5s ease-in-out;
+  z-index: 1; /* Below canvas and header, but above hover hitbox */
+  transform: translateX(100%); /* Hidden by default */
+}
+
+.side-panel.visible {
+  transform: translateX(0); /* Slide back in when visible */
+}
+
+.side-panel.hidden {
+  transform: translateX(calc(100%)); /* Keep a small part visible */
+}
+
+/* When side panel is expanded, allow interaction; otherwise, none */
+.side-panel {
+  pointer-events: none; /* Disable interaction when hidden */
+}
+
+.side-panel.visible {
+  pointer-events: auto; /* Allow interaction when expanded */
+}
+
+.side-panel-content {
+  width: 250px; /* Panel width */
+  background-color: white;
+  padding: 10px;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2); /* Adjust drop shadow */
+}
+
+
+.tool-tabs,
+.color-menu {
+  padding: 10px;
+  pointer-events: auto; /* Allow interaction when not expanded */
 }
 
 .drawing-canvas.text-cursor {

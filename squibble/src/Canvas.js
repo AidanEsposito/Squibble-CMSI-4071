@@ -24,6 +24,7 @@ const Canvas = ({ currentColor, brushSize, activeTool, lines, setLines, showBoun
   const [imagePosition, setImagePosition] = useState(null);
 
   const [objectsToRedo, setObjectsToRedo] = useState([]);
+  const [isUndoOrRedo, setIsUndoOrRedo] = useState(false);
 
 
 const handleMouseDown = (e) => {
@@ -542,54 +543,73 @@ const handleMouseMove = (e) => {
     };
   }, [selectedObjects, setLines]);
 
+  // useEffect to clear redo stack when a new line is added after an undo
   useEffect(() => {
-    const handleKeyDown = (event) => {
-      if ((event.ctrlKey || event.metaKey) && event.key === 'z') {
-        event.preventDefault(); // Prevent default browser undo behavior
+    if (!isUndoOrRedo) {
+      // Clear the redo stack if the current action is not undo or redo
+      setObjectsToRedo([]);
+      console.log('New action detected, redo stack cleared');
+    }
+    // Reset isUndoOrRedo to false after handling
+    setIsUndoOrRedo(false);
+  }, [lines]);
 
-        // Handle Undo
-        setLines((prevLines) => {
-          if (prevLines.length > 0) {
-            const lastObject = prevLines[prevLines.length - 1];
-            setObjectsToRedo((prevRedo) => [lastObject, ...prevRedo]);
+// Handle Undo (Ctrl + Z)
+useEffect(() => {
+  const handleKeyDown = (event) => {
+    if ((event.ctrlKey || event.metaKey) && event.key === 'z') {
+      event.preventDefault(); // Prevent default browser undo behavior
 
-            // Log state after undo
-            console.log('Undo action:');
-            console.log('lines:', prevLines.slice(0, -1));
+      setLines((prevLines) => {
+        if (prevLines.length > 0) {
+          const lastObject = prevLines[prevLines.length - 1];
+          
+          // Add the last object to the redo stack
+          setObjectsToRedo((prevRedo) => {
+            if (prevRedo[0] !== lastObject) {
+              // Only add the lastObject if it's not already at the top of the redo stack to prevent duplication
+              return [lastObject, ...prevRedo];
+            }
+            return prevRedo;
+          });
 
-            return prevLines.slice(0, -1);
-          }
-          return prevLines;
-        });
-      }
+          console.log('Undo action:');
+          console.log('lines:', prevLines.slice(0, -1));
+          return prevLines.slice(0, -1);
+        }
+        return prevLines;
+      });
 
-      if ((event.ctrlKey || event.metaKey) && event.key === 'y') {
-        event.preventDefault(); // Prevent default browser redo behavior
+      setIsUndoOrRedo(true); // Set to true to indicate that an undo action occurred
+    }
 
-        // Handle Redo
-        setObjectsToRedo((prevRedo) => {
-          if (prevRedo.length > 0) {
-            const objectToRedo = prevRedo[0];
-            setLines((prevLines) => {
-              // Only add back the object if it isn't already there (prevent duplicate)
-              if (!prevLines.includes(objectToRedo)) {
-                const updatedLines = [...prevLines, objectToRedo];
+    // Handle Redo (Ctrl + Y)
+    if ((event.ctrlKey || event.metaKey) && event.key === 'y') {
+      event.preventDefault(); // Prevent default browser redo behavior
 
-                // Log state after redo
-                console.log('Redo action:');
-                console.log('lines:', updatedLines);
-                console.log('objectsToRedo:', prevRedo.slice(1));
+      setObjectsToRedo((prevRedo) => {
+        if (prevRedo.length > 0) {
+          const objectToRedo = prevRedo[0];
+          setLines((prevLines) => {
+            const updatedLines = Array.isArray(objectToRedo)
+              ? [...prevLines, ...objectToRedo] // Spread if group of objects
+              : [...prevLines, objectToRedo]; // Single object
 
-                return updatedLines;
-              }
-              return prevLines;
-            });
-            return prevRedo.slice(1);
-          }
-          return prevRedo;
-        });
-      }
-    };
+            console.log('Redo action:');
+            console.log('lines:', updatedLines);
+            console.log('objectsToRedo:', prevRedo.slice(1));
+
+            return updatedLines;
+          });
+          return prevRedo.slice(1);
+        }
+        return prevRedo;
+      });
+
+      setIsUndoOrRedo(true); // Set to true to indicate that a redo action occurred
+    }
+  };
+
   
     // Attach the event listener
     window.addEventListener('keydown', handleKeyDown);
@@ -598,7 +618,9 @@ const handleMouseMove = (e) => {
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [setLines]);
+  }, [setLines, setObjectsToRedo]);
+
+  
   
 
   return (

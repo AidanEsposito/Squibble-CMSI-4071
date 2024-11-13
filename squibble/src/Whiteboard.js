@@ -6,39 +6,71 @@ import TextOptions from './TextOptions.js';
 import './Whiteboard.css';
 
 const Whiteboard = ({ texts, setTexts, shouldReset, setShouldReset }) => {
-  const [currentColor, setCurrentColor] = useState('#000000');      // Current pen color
-  const [brushSize, setBrushSize] = useState(2);                    // Current brush size
-  const [tempBrushSize, setTempBrushSize] = useState(brushSize);    // Temporary state for brush size
-  const [activeTool, setActiveTool] = useState('pen');               // Active tool: 'pen', 'pan', 'eraser', or 'text'
+  const [currentColor, setCurrentColor] = useState('#000000'); // Current pen color
+  const [brushSize, setBrushSize] = useState(2); // Current brush size
+  const [tempBrushSize, setTempBrushSize] = useState(brushSize); // Temporary state for brush size
+  const [activeTool, setActiveTool] = useState('pen'); // Active tool: 'pen', 'pan', 'eraser', or 'text'
   const [showBoundingBoxes, setShowBoundingBoxes] = useState(false); // Shows bounding boxes of all lines drawn (debug)
-  const [lines, setLines] = useState([]);                           // Stores details of all drawn lines
-  const [selectedColorIndex, setSelectedColorIndex] = useState(0);  // Track the selected color index
-  const [sampleColors, setSampleColors] = useState([                // Colors used for swatches in color menu
-    '#000000', '#FF0000', '#00FF00', '#0000FF', '#FFFF00', '#FF00FF', '#00DEAD'
-  ]);
-  const [isTextMenuOpen, setIsTextMenuOpen] = useState(false);      // Track if the TextOptions menu is open
+  const [lines, setLines] = useState([]); // Stores details of all drawn lines
+  const [selectedColorIndex, setSelectedColorIndex] = useState(0); // Track the selected color index
+  const [sampleColors, setSampleColors] = useState([
+    '#000000',
+    '#FF0000',
+    '#00FF00',
+    '#0000FF',
+    '#FFFF00',
+    '#FF00FF',
+    '#00DEAD',
+  ]); // Colors used for swatches in color menu
+  const [isTextMenuOpen, setIsTextMenuOpen] = useState(false); // Track if the TextOptions menu is open
+  const [sidePanelVisible, setSidePanelVisible] = useState(false); // Visibility of the side panel
+  const [sidePanelHovered, setSidePanelHovered] = useState(false); // Track if the side panel is being hovered over
+  const timeoutRef = useRef(null);
+  
+  // Function to reset the side panel timeout
+  const resetSidePanelTimeout = () => {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+    timeoutRef.current = setTimeout(() => {
+      setSidePanelVisible(false);
+    }, 5000); // Hide after 5 seconds of inactivity
+  };
 
-  // useEffect to debounce the brush size update
+  // Add event listeners to track user activity near the right edge of the screen
   useEffect(() => {
-    const debounceTimer = setTimeout(() => {
-      setBrushSize(tempBrushSize); // Set the actual brush size after a delay (saves resources)
-    }, 300);
+    const handleMouseMove = (e) => {
+      // Only show the panel if the cursor is in the rightmost 2% of the screen width
+      if (e.clientX >= window.innerWidth * 0.98) {
+        setSidePanelVisible(true);
+        resetSidePanelTimeout();
+      }
+    };
 
-    // Cleanup function to clear the timeout if the component re-renders
-    return () => clearTimeout(debounceTimer);
-  }, [tempBrushSize]);
+    window.addEventListener('mousemove', handleMouseMove);
+
+    // Cleanup listeners on unmount
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
+  }, []);
+
+  useEffect(() => {
+    resetSidePanelTimeout(); // Initialize the timeout when component mounts
+  }, []);
 
   // Handle color selection from the sample palette
   const handleSampleColorSelect = (color, index) => {
     setCurrentColor(color);
     setSelectedColorIndex(index);
-    
     // Only switch the active tool if the text menu is not open
     if (!isTextMenuOpen) {
       setActiveTool('pen');
     }
   };
-  
 
   // Handle color selection from the custom color picker
   const handleCustomColorSelect = (e) => {
@@ -53,6 +85,7 @@ const Whiteboard = ({ texts, setTexts, shouldReset, setShouldReset }) => {
     });
   };
 
+  // Key binding to switch colors (1-9 keys)
   useEffect(() => {
     const handleKeyDown = (event) => {
       // Prevent color change if the text menu is open (user typing text)
@@ -75,25 +108,16 @@ const Whiteboard = ({ texts, setTexts, shouldReset, setShouldReset }) => {
       window.removeEventListener('keydown', handleKeyDown);
     };
   }, [sampleColors, isTextMenuOpen]);
-  
 
   const handleAddText = (textOptions) => {
     setTexts((prevTexts) => [
       ...prevTexts,
       {
         ...textOptions,
-        position: { x: 100, y: 100 } // Default position, ideally set via user click
-      }
+        position: { x: 100, y: 100 }, // Default position, ideally set via user click
+      },
     ]);
   };
-
-  useEffect(() => {
-    if (shouldReset) {
-      console.log('Resetting whiteboard...');
-      setTexts([]);
-      setShouldReset(false); 
-    }
-  }, [shouldReset, setTexts, setShouldReset]);
 
   return (
     <div className="whiteboard">
@@ -105,29 +129,51 @@ const Whiteboard = ({ texts, setTexts, shouldReset, setShouldReset }) => {
         setLines={setLines}
         showBoundingBoxes={showBoundingBoxes}
         isTextMenuOpen={isTextMenuOpen}
-        setIsTextMenuOpen={setIsTextMenuOpen} // Pass these down to Canvas
+        setIsTextMenuOpen={setIsTextMenuOpen}
       />
 
-      <ToolTabs
-        activeTool={activeTool}
-        setActiveTool={setActiveTool}
-        tempBrushSize={tempBrushSize}
-        setTempBrushSize={setTempBrushSize}
-        setShowBoundingBoxes={setShowBoundingBoxes}
-        showBoundingBoxes={showBoundingBoxes}
+      {/* Hover Trigger Area */}
+      <div
+        className="hover-trigger"
+        onMouseEnter={() => {
+          if (!sidePanelVisible) {
+            setSidePanelVisible(true);
+            resetSidePanelTimeout();
+          }
+        }}
       />
 
-      <ColorMenu
-        currentColor={currentColor}
-        handleSampleColorSelect={handleSampleColorSelect}
-        handleCustomColorSelect={handleCustomColorSelect}
-        sampleColors={sampleColors}
-      />
+      {/* Side Panel */}
+      <div
+        className={`side-panel ${sidePanelVisible ? 'visible' : 'hidden'}`}
+        onMouseEnter={() => {
+          if (!sidePanelHovered) {
+            clearTimeout(timeoutRef.current);
+          }
+        }}
+        onMouseLeave={() => {
+          resetSidePanelTimeout();
+        }}
+      >
+        <ToolTabs
+          activeTool={activeTool}
+          setActiveTool={setActiveTool}
+          tempBrushSize={tempBrushSize}
+          setTempBrushSize={setTempBrushSize}
+          setShowBoundingBoxes={setShowBoundingBoxes}
+          showBoundingBoxes={showBoundingBoxes}
+        />
+
+        <ColorMenu
+          currentColor={currentColor}
+          handleSampleColorSelect={handleSampleColorSelect}
+          handleCustomColorSelect={handleCustomColorSelect}
+          sampleColors={sampleColors}
+        />
+      </div>
 
       {/* Render TextOptions only when the Text Tool is active */}
-      {activeTool === 'text' && (
-        <TextOptions onAddText={handleAddText} />
-      )}
+      {activeTool === 'text' && <TextOptions onAddText={handleAddText} />}
 
       {/* Render the added texts */}
       {texts.map((textObj, index) => (

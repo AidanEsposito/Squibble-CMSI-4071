@@ -1,18 +1,17 @@
-header {
+.header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 10px;
   background-color: rgb(9, 179, 235);
   color: #fff;
-  user-select: none;
+  user-select: none; /* Prevent text selection */
 }
 
 .logo {
   display: flex;
   align-items: center;
   cursor: pointer;
-  user-select: none;
 }
 
 .logo img {
@@ -23,78 +22,99 @@ header {
 .timer {
   font-size: 16px;
   align-items: center;
-  width: 120px; /* Set a fixed width large enough to fit the maximum value */
-  text-align: center; /* Center the text within the timer box */
-  display: inline-block; /* Ensure it respects the fixed width */
-  user-select: none;
+  width: 120px;
+  text-align: center;
+  display: inline-block;
 }
-button {
+
+.archive button {
   margin: 0 10px;
   padding: 8px 16px;
   background-color: #555;
   color: #fff;
   border: none;
   cursor: pointer;
-  user-select: none;
 }
 
-button:hover {
+.archive button:hover {
   background-color: #777;
 }
 
-.media-menu {
-  align-items: right;
-  position: absolute;
-  top:87.5px; 
-  right: 0px; 
-  display: flex;
-  flex-direction: column; 
-  background-color: rgb(9, 179, 235);
-  border: 1px solid rgb(9, 179, 235);
-  padding: 10px;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-  user-select: none;
-}
-
-.media-menu button {
-  margin-bottom: 10px; 
+.media-menu-toggle {
+  margin-left: 10px;
+  padding: 8px 16px;
   background-color: #555;
-  border: 1px solid #ccc;
-  padding: 8px 12px;
+  color: #fff;
+  border: none;
   cursor: pointer;
 }
 
-.media-menu button:hover {
-  background-color: #ddd;
+.media-menu-toggle:hover {
+  background-color: #777;
 }
 
-.submenu {
-  position: absolute;
-  top: 87.5px; 
-  right: 150px; 
+/* Media menu styling */
+.media-menu {
+  position: absolute; /* Ensure it doesn’t shift other elements */
+  top: 60px; /* Adjust as needed to position it correctly below the button */
+  right: 10px; /* Adjust to align to the right of the header */
+  display: flex;
+  flex-direction: column;
   background-color: rgb(9, 179, 235);
-  border: 1px solid rgb(9, 179, 235);
   padding: 10px;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-  user-select: none;
+  border: 1px solid rgb(9, 179, 235);
+  box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.5); /* Increased drop shadow for better contrast */
+  gap: 10px; /* Add spacing between buttons */
+  z-index: 1000; /* Ensure it appears above other elements */
 }
 
-.submenu input, .submenu select {
-  display: block;
-  margin: 10px 0;
-  padding: 5px;
+.media-menu button {
+  background-color: #555;
+  color: #fff;
+  border: none;
+  padding: 8px 12px;
+  cursor: pointer;
+  transition: transform 0.3s ease-in-out; /* For animation */
 }
 
-.submenu label {
-  margin-bottom: 5px;
-  font-weight: bold;
-  user-select: none;
+.media-menu button:hover {
+  background-color: #777;
 }
 
-.archive{
-  background-color: red;
-  border-color: red;
-  font-weight: bold;
-  user-select: none;
+.animated-slide-out {
+  animation: slideOut 0.5s ease-in-out forwards;
 }
 
+@keyframes slideOut {
+  0% {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.auth-button {
+  margin: 0 10px;
+  padding: 8px 16px;
+  background-color: #555;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+}
+
+.auth-button:hover {
+  background-color: #777;
+}
+
+.auth-button-container {
+  display: inline-flex;
+  align-items: center;
+}
+
+.google-signin-container {
+  display: inline-flex;
+  align-items: center;
+}

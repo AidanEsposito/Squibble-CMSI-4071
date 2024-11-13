@@ -18,16 +18,10 @@ const Header = ({
   setActiveTool
 }) => {
   const user = useAuthentication();
-  const [activeMediaItem, setActiveMediaItem] = useState(null);
-  const [activeSubmenu, setActiveSubmenu] = useState(null);
+  const [isMediaMenuOpen, setIsMediaMenuOpen] = useState(false);
 
-  const handleMediaMenuToggle = (menu) => {
-    setActiveMediaItem(activeMediaItem === menu ? null : menu);
-    setActiveSubmenu(null);
-  };
-
-  const handleSubmenuToggle = (submenu) => {
-    setActiveSubmenu(activeSubmenu === submenu ? null : submenu);
+  const handleMediaMenuToggle = () => {
+    setIsMediaMenuOpen((prev) => !prev);
   };
 
   useEffect(() => {
@@ -56,11 +50,13 @@ const Header = ({
 
   return (
     <header className="header">
-      <div className="logo" 
-      aria-label="An artistic squirrel says: 'I only paint with the finest nuts!'"
-      data-balloon-pos="right"
-      onClick={() => window.location.reload()}>
-        <img src={`${process.env.PUBLIC_URL}/SquibbleLogo.png`} alt ='Squibble logo'/>
+      <div 
+        className="logo" 
+        aria-label="An artistic squirrel says: 'I only paint with the finest nuts!'"
+        data-balloon-pos="right"
+        onClick={() => window.location.reload()}
+      >
+        <img src={`${process.env.PUBLIC_URL}/SquibbleLogo.png`} alt='Squibble logo' />
       </div>
       <div className="timer">{formatTime(timer)}</div>
       <div className="archive">
@@ -69,31 +65,13 @@ const Header = ({
       {user ? (
         <>
           <SignOut />
-          <button onClick={() => handleMediaMenuToggle('media')}>Media Menu</button>
-          {activeMediaItem === 'media' && (
-            <div className="media-menu">
-              <button onClick={() => handleSubmenuToggle('images')}>Images</button>
-              <button onClick={() => handleSubmenuToggle('gifs')}>Gifs</button>
-              <button onClick={() => handleSubmenuToggle('drawings')}>Drawings</button>
-              <button onClick={() => handleSubmenuToggle('postit')}>Post-it Notes</button>
-            </div>
-          )}
-          {activeSubmenu === 'drawings' && (
-            <div className="submenu drawing-menu">
-              <label>Brush Size: </label>
-              <input
-                type="range"
-                min="1"
-                max="20"
-                value={brushSize}
-                onChange={(e) => setBrushSize(e.target.value)}
-              />
-              <label>Color: </label>
-              <input
-                type="color"
-                value={currentColor}
-                onChange={(e) => setCurrentColor(e.target.value)}
-              />
+          <button className="media-menu-toggle" onClick={handleMediaMenuToggle}>Media Menu</button>
+          {isMediaMenuOpen && (
+            <div className="media-menu animated-slide-out">
+              <button onClick={() => console.log('Images button clicked')}>Images</button>
+              <button onClick={() => console.log('GIFs button clicked')}>GIFs</button>
+              <button onClick={() => console.log('Drawings button clicked')}>Drawings</button>
+              <button onClick={() => console.log('Post-it Notes button clicked')}>Post-it Notes</button>
             </div>
           )}
         </>

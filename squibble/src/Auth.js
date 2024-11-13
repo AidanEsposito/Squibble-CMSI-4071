@@ -13,9 +13,8 @@ export function SignIn() {
     }
   };
 
-  return <button onClick={handleSignIn}>Sign In with Google</button>;
+  return <button className="auth-button" onClick={handleSignIn}>Sign In with Google</button>;
 }
-
 
 export function SignOut() {
   const handleSignOut = async () => {
@@ -28,12 +27,13 @@ export function SignOut() {
   };
 
   return (
-    <div>
+    <div className="auth-button-container">
       Hello, {auth.currentUser?.displayName} &nbsp;
-      <button onClick={handleSignOut}>Sign Out</button>
+      <button className="auth-button" onClick={handleSignOut}>Sign Out</button>
     </div>
   );
 }
+
 
 export function useAuthentication() {
   const [user, setUser] = useState(null);
