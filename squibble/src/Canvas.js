@@ -27,74 +27,85 @@ const Canvas = ({ currentColor, brushSize, activeTool, lines, setLines, showBoun
   const [isUndoOrRedo, setIsUndoOrRedo] = useState(false);
 
 
-const handleMouseDown = (e) => {
-  const { offsetX, offsetY } = e.nativeEvent;
-
-  if (activeTool === 'marquee' && combinedBoundingBox) {
-    if (
-      offsetX >= combinedBoundingBox.minX &&
-      offsetX <= combinedBoundingBox.maxX &&
-      offsetY >= combinedBoundingBox.minY &&
-      offsetY <= combinedBoundingBox.maxY
-    ) {
-      // Start manipulating selected objects
-      isManipulatingRef.current = true;
-      previousPositionRef.current = { x: offsetX, y: offsetY };
-      return;
+  const handleMouseDown = (e) => {
+    const { offsetX, offsetY } = e.nativeEvent;
+  
+    if (activeTool === 'marquee' && combinedBoundingBox) {
+      if (
+        offsetX >= combinedBoundingBox.minX &&
+        offsetX <= combinedBoundingBox.maxX &&
+        offsetY >= combinedBoundingBox.minY &&
+        offsetY <= combinedBoundingBox.maxY
+      ) {
+        // Start manipulating selected objects
+        isManipulatingRef.current = true;
+        previousPositionRef.current = { x: offsetX, y: offsetY };
+        return;
+      }
     }
-  }
-  if (activeTool === 'marquee') {
-    // Single Object Selection or Marquee Start
-    const clickedObject = lines.find((object) => {
+    
+    if (activeTool === 'marquee') {
+      // Single Object Selection or Marquee Start
+      const clickedObject = lines.find((object) => {
         if (object.type === 'spline') {
           // Use accurate spline collision detection for splines
           return checkSplineCollision(object, offsetX, offsetY);
         } else {
-        const { boundingBox } = getBoundingBox(object);
-        return (
-          offsetX >= boundingBox.minX &&
-          offsetX <= boundingBox.maxX &&
-          offsetY >= boundingBox.minY &&
-          offsetY <= boundingBox.maxY
-        );
-      }
-    });
-
-    if (clickedObject && !e.shiftKey) {
-      // Select the single object, deselect others
-      setSelectedObjects([clickedObject]);
-      setCombinedBoundingBox(getBoundingBox(clickedObject).boundingBox);
-    } else if (clickedObject && e.shiftKey) {
-      // Shift-click to add to selection
-      setSelectedObjects((prevSelected) => {
-        if (!prevSelected.includes(clickedObject)) {
-          return [...prevSelected, clickedObject];
+          const { boundingBox } = getBoundingBox(object);
+          return (
+            offsetX >= boundingBox.minX &&
+            offsetX <= boundingBox.maxX &&
+            offsetY >= boundingBox.minY &&
+            offsetY <= boundingBox.maxY
+          );
         }
-        return prevSelected;
       });
-    } else {
-      // Start marquee selection
-      setIsMarqueeActive(true);
-      setMarqueeStart({ x: offsetX, y: offsetY });
-      setMarqueeEnd({ x: offsetX, y: offsetY });
+  
+      if (clickedObject) {
+        // Always add to the selection when clicking an object
+        setSelectedObjects((prevSelected) => {
+          if (!prevSelected.includes(clickedObject)) {
+            return [...prevSelected, clickedObject];
+          }
+          return prevSelected;
+        });
+  
+        // Update the combined bounding box to include the new object
+        setCombinedBoundingBox((prevBoundingBox) => {
+          const newBoundingBox = getBoundingBox(clickedObject).boundingBox;
+          if (!prevBoundingBox) return newBoundingBox;
+  
+          // Update combined bounding box with the new object
+          return {
+            minX: Math.min(prevBoundingBox.minX, newBoundingBox.minX),
+            minY: Math.min(prevBoundingBox.minY, newBoundingBox.minY),
+            maxX: Math.max(prevBoundingBox.maxX, newBoundingBox.maxX),
+            maxY: Math.max(prevBoundingBox.maxY, newBoundingBox.maxY),
+          };
+        });
+      } else {
+        // Start marquee selection if no object was clicked
+        setIsMarqueeActive(true);
+        setMarqueeStart({ x: offsetX, y: offsetY });
+        setMarqueeEnd({ x: offsetX, y: offsetY });
+      }
+    } else if (activeTool === 'pen') {
+      setIsDrawing(true);
+      setPreviousPosition({ x: offsetX, y: offsetY });
+      setRecentLines([]);
+    } else if (activeTool === 'eraser') {
+      setIsErasing(true);
+      handleErase(e);
+    } else if (activeTool === 'text') {
+      setTextMenuPosition({ x: offsetX, y: offsetY });
+      setIsTextMenuOpen(true);
+    } else if (activeTool === 'image') {
+      // Set image position where user clicked and open the file picker
+      setImagePosition({ x: offsetX, y: offsetY });
+      document.getElementById('image-upload-input').click();
     }
-  } else if (activeTool === 'pen') {
-    setIsDrawing(true);
-    setPreviousPosition({ x: offsetX, y: offsetY });
-    setRecentLines([]);
-  } else if (activeTool === 'eraser') {
-    setIsErasing(true);
-    handleErase(e);
-  } else if (activeTool === 'text') {
-    setTextMenuPosition({ x: offsetX, y: offsetY });
-    setIsTextMenuOpen(true);
-  } else if (activeTool === 'image') {
-    // Set image position where user clicked and open the file picker
-    setImagePosition({ x: offsetX, y: offsetY });
-    document.getElementById('image-upload-input').click();
-  }
-};
-
+  };
+  
 
 const handleMouseUp = () => {
   setIsDrawing(false);
