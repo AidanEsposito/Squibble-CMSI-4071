@@ -43,9 +43,42 @@ const handleMouseDown = (e) => {
       return;
     }
   }
+  if (activeTool === 'marquee') {
+    // Single Object Selection or Marquee Start
+    const clickedObject = lines.find((object) => {
+        if (object.type === 'spline') {
+          // Use accurate spline collision detection for splines
+          return checkSplineCollision(object, offsetX, offsetY);
+        } else {
+        const { boundingBox } = getBoundingBox(object);
+        return (
+          offsetX >= boundingBox.minX &&
+          offsetX <= boundingBox.maxX &&
+          offsetY >= boundingBox.minY &&
+          offsetY <= boundingBox.maxY
+        );
+      }
+    });
 
-
-  if (activeTool === 'pen') {
+    if (clickedObject && !e.shiftKey) {
+      // Select the single object, deselect others
+      setSelectedObjects([clickedObject]);
+      setCombinedBoundingBox(getBoundingBox(clickedObject).boundingBox);
+    } else if (clickedObject && e.shiftKey) {
+      // Shift-click to add to selection
+      setSelectedObjects((prevSelected) => {
+        if (!prevSelected.includes(clickedObject)) {
+          return [...prevSelected, clickedObject];
+        }
+        return prevSelected;
+      });
+    } else {
+      // Start marquee selection
+      setIsMarqueeActive(true);
+      setMarqueeStart({ x: offsetX, y: offsetY });
+      setMarqueeEnd({ x: offsetX, y: offsetY });
+    }
+  } else if (activeTool === 'pen') {
     setIsDrawing(true);
     setPreviousPosition({ x: offsetX, y: offsetY });
     setRecentLines([]);
@@ -55,10 +88,6 @@ const handleMouseDown = (e) => {
   } else if (activeTool === 'text') {
     setTextMenuPosition({ x: offsetX, y: offsetY });
     setIsTextMenuOpen(true);
-  } else if (activeTool === 'marquee') {
-    setIsMarqueeActive(true);
-    setMarqueeStart({ x: offsetX, y: offsetY });
-    setMarqueeEnd({ x: offsetX, y: offsetY });
   } else if (activeTool === 'image') {
     // Set image position where user clicked and open the file picker
     setImagePosition({ x: offsetX, y: offsetY });
