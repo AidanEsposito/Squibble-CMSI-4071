@@ -4,7 +4,7 @@
 
 To use Squibble as a basic user, you can visit the website provided at the link below:
 
-  *future Squibble host link*
+  *[Squibble](https://squibble-d2d9c.web.app/)*
 
 To install Squibble manually based on this Github repository, you must follow these steps:
 
