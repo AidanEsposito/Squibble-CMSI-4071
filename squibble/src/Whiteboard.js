@@ -3,9 +3,11 @@ import Canvas from './Canvas.js';
 import ToolTabs from './ToolTabs.js';
 import ColorMenu from './ColorMenu.js';
 import TextOptions from './TextOptions.js';
+import { useAuthentication } from './Auth.js';
 import './Whiteboard.css';
 
 const Whiteboard = ({ texts, setTexts, shouldReset, setShouldReset }) => {
+  const user = useAuthentication(); // Get the current user
   const [currentColor, setCurrentColor] = useState('#000000'); // Current pen color
   const [brushSize, setBrushSize] = useState(2); // Current brush size
   const [tempBrushSize, setTempBrushSize] = useState(brushSize); // Temporary state for brush size
@@ -56,11 +58,17 @@ const Whiteboard = ({ texts, setTexts, shouldReset, setShouldReset }) => {
         clearTimeout(timeoutRef.current);
       }
     };
-  }, []);
+  }, [user]);
 
   useEffect(() => {
-    resetSidePanelTimeout(); // Initialize the timeout when component mounts
-  }, []);
+    if (user) resetSidePanelTimeout(); 
+  }, [user]);
+
+  useEffect(() => {
+    if (!user) {
+      setActiveTool('none'); 
+    }
+  }, [user]); 
 
   // Handle color selection from the sample palette
   const handleSampleColorSelect = (color, index) => {
@@ -132,47 +140,51 @@ const Whiteboard = ({ texts, setTexts, shouldReset, setShouldReset }) => {
         setIsTextMenuOpen={setIsTextMenuOpen}
       />
 
-      {/* Hover Trigger Area */}
-      <div
-        className="hover-trigger"
-        onMouseEnter={() => {
-          if (!sidePanelVisible) {
-            setSidePanelVisible(true);
-            resetSidePanelTimeout();
-          }
-        }}
-      />
+      {user && ( // Only render hover trigger and side panel if the user is authenticated
+        <>
+          {/* Hover Trigger Area */}
+          <div
+            className="hover-trigger"
+            onMouseEnter={() => {
+              if (!sidePanelVisible) {
+                setSidePanelVisible(true);
+                resetSidePanelTimeout();
+              }
+            }}
+          />
 
-      {/* Side Panel */}
-      <div
-        className={`side-panel ${sidePanelVisible ? 'visible' : 'hidden'}`}
-        onMouseEnter={() => {
-          if (!sidePanelHovered) {
-            clearTimeout(timeoutRef.current);
-          }
-        }}
-        onMouseLeave={() => {
-          resetSidePanelTimeout();
-        }}
-      >
-        <ToolTabs
-          activeTool={activeTool}
-          setActiveTool={setActiveTool}
-          brushSize={brushSize}
-          tempBrushSize={tempBrushSize}
-          setTempBrushSize={setTempBrushSize}
-          setBrushSize={setBrushSize} // Pass setBrushSize
-          setShowBoundingBoxes={setShowBoundingBoxes}
-          showBoundingBoxes={showBoundingBoxes}
-        />
+          {/* Side Panel */}
+          <div
+            className={`side-panel ${sidePanelVisible ? 'visible' : 'hidden'}`}
+            onMouseEnter={() => {
+              if (!sidePanelHovered) {
+                clearTimeout(timeoutRef.current);
+              }
+            }}
+            onMouseLeave={() => {
+              resetSidePanelTimeout();
+            }}
+          >
+            <ToolTabs
+              activeTool={activeTool}
+              setActiveTool={setActiveTool}
+              brushSize={brushSize}
+              tempBrushSize={tempBrushSize}
+              setTempBrushSize={setTempBrushSize}
+              setBrushSize={setBrushSize} // Pass setBrushSize
+              setShowBoundingBoxes={setShowBoundingBoxes}
+              showBoundingBoxes={showBoundingBoxes}
+            />
 
-        <ColorMenu
-          currentColor={currentColor}
-          handleSampleColorSelect={handleSampleColorSelect}
-          handleCustomColorSelect={handleCustomColorSelect}
-          sampleColors={sampleColors}
-        />
-      </div>
+            <ColorMenu
+              currentColor={currentColor}
+              handleSampleColorSelect={setCurrentColor}
+              handleCustomColorSelect={(e) => setCurrentColor(e.target.value)}
+              sampleColors={sampleColors}
+            />
+          </div>
+        </>
+      )}
 
       {/* Render TextOptions only when the Text Tool is active */}
       {activeTool === 'text' && <TextOptions onAddText={handleAddText} />}
