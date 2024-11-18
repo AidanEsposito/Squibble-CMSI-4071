@@ -399,6 +399,8 @@ const handleMouseMove = (e) => {
     setLines((prevLines) => [...prevLines, newText]);
     setIsTextMenuOpen(false);
   };
+
+
   
 
   const handleImageUpload = (e) => {

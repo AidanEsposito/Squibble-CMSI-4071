@@ -178,8 +178,8 @@ const Whiteboard = ({ texts, setTexts, shouldReset, setShouldReset }) => {
 
             <ColorMenu
               currentColor={currentColor}
-              handleSampleColorSelect={setCurrentColor}
-              handleCustomColorSelect={(e) => setCurrentColor(e.target.value)}
+              handleSampleColorSelect={handleSampleColorSelect}
+              handleCustomColorSelect={handleCustomColorSelect}
               sampleColors={sampleColors}
             />
           </div>

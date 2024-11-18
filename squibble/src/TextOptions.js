@@ -1,61 +1,101 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import './TextOptions.css';
 
 const TextOptions = ({ onAddText, selectedColor }) => {
   const [text, setText] = useState('');
   const [color, setColor] = useState(selectedColor);
   const [size, setSize] = useState(16);
   const [font, setFont] = useState('Arial');
+  const editorRef = useRef(null);
 
   // Update the color state whenever the selectedColor prop changes
   useEffect(() => {
     setColor(selectedColor);
   }, [selectedColor]);
 
-  // Ensure the text size doesn't exceed 200 and clear if empty or zero
-  const handleSizeChange = (e) => {
-    let newSize = parseInt(e.target.value) || '';
-    if (newSize === 0) {
-      setSize('');
-    } else if (newSize > 200) {
-      newSize = 200;
-    }
-    setSize(newSize);
+  const handleInputChange = () => {
+    setText(editorRef.current.innerHTML);
   };
 
   const handleAddClick = () => {
     if (text.trim() === '') return; // Prevent adding empty text
     onAddText({ text, color, size, font });
     setText(''); // Clear the text input after adding
+    editorRef.current.innerHTML = '';
   };
 
-  const handlePresetSizeSelect = (e) => {
-    const selectedSize = parseInt(e.target.value);
-    setSize(selectedSize);
-  };
+  // Function to wrap selected text with BBCode tags
+  const formatText = (tag) => {
+    const selection = window.getSelection();
+    if (!selection.rangeCount) return;
 
-  const handleEnterKey = (event) => {
-    if (event.key === 'Enter') {
-      if (text.trim() === '') return;
-      onAddText({ text, color, size, font });
+    const range = selection.getRangeAt(0);
+    const selectedText = range.toString();
+
+    if (selectedText) {
+      const beforeTag = `[${tag}]`;
+      const afterTag = `[/${tag}]`;
+
+      // Replace the selected text with formatted text
+      range.deleteContents();
+      range.insertNode(document.createTextNode(`${beforeTag}${selectedText}${afterTag}`));
     }
   };
+  
+  // Utility function to convert BBCode to HTML
+  const parseBBCodeToHTML = (bbcode) => {
+    return bbcode
+      .replace(/\[b\](.*?)\[\/b\]/g, '<b>$1</b>')       // Bold
+      .replace(/\[i\](.*?)\[\/i\]/g, '<i>$1</i>')       // Italic
+      .replace(/\[u\](.*?)\[\/u\]/g, '<u>$1</u>');      // Underline
+  };
 
+  // Handlers for formatting buttons
+  const handleBold = () => formatText('b');
+  const handleItalic = () => formatText('i');
+  const handleUnderline = () => formatText('u');
+
+  // Keyboard shortcuts for formatting
   useEffect(() => {
-    window.addEventListener('keydown', handleEnterKey);
-    return () => {
-      window.removeEventListener('keydown', handleEnterKey);
+    const handleKeyDown = (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === 'b') {
+        e.preventDefault();
+        handleBold();
+      } else if ((e.ctrlKey || e.metaKey) && e.key === 'i') {
+        e.preventDefault();
+        handleItalic();
+      } else if ((e.ctrlKey || e.metaKey) && e.key === 'u') {
+        e.preventDefault();
+        handleUnderline();
+      }
     };
-  }, [text, color, size, font]);
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, []);
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', width: '100%' }}>
-      {/* Text Input */}
-      <input
-        type="text"
-        value={text}
-        onChange={(e) => setText(e.target.value)}
-        placeholder="Enter text"
-        style={{ padding: '8px', fontSize: '14px', width: '90%' }}
+      {/* Formatting Buttons */}
+      <div className="formatting-buttons" style={{ marginBottom: '10px' }}>
+        <button onClick={handleBold}><b>B</b></button>
+        <button onClick={handleItalic}><i>I</i></button>
+        <button onClick={handleUnderline}><u>U</u></button>
+      </div>
+
+      {/* Rich Text Editor */}
+      <div
+        ref={editorRef}
+        contentEditable
+        className="text-editor"
+        onInput={handleInputChange}
+        style={{
+          border: '1px solid black',
+          minHeight: '100px',
+          padding: '10px',
+          overflowY: 'auto',
+          whiteSpace: 'pre-wrap',
+        }}
       />
 
       {/* Unified Text Size Input with Dropdown */}
@@ -63,7 +103,7 @@ const TextOptions = ({ onAddText, selectedColor }) => {
         <input
           type="number"
           value={size}
-          onChange={handleSizeChange}
+          onChange={(e) => setSize(parseInt(e.target.value))}
           placeholder="Font size"
           min="1"
           max="200"
@@ -76,7 +116,7 @@ const TextOptions = ({ onAddText, selectedColor }) => {
         />
         <select
           value={size}
-          onChange={handlePresetSizeSelect}
+          onChange={(e) => setSize(parseInt(e.target.value))}
           style={{
             position: 'absolute',
             right: '0',
@@ -116,7 +156,6 @@ const TextOptions = ({ onAddText, selectedColor }) => {
         <option value="Impact">Impact</option>
         <option value="Lucida Console">Lucida Console</option>
         <option value="Tahoma">Tahoma</option>
-        {/* Add more font options as needed */}
       </select>
 
       {/* Selected Color Display */}
@@ -125,7 +164,7 @@ const TextOptions = ({ onAddText, selectedColor }) => {
         <div
           style={{
             display: 'inline-block',
-            width: '20px',
+            width: '80px',
             height: '20px',
             backgroundColor: color,
             border: '1px solid black',
