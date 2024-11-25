@@ -1,0 +1,51 @@
+
+Documentation Feedback ~ Deliverable #4
+Software Design Document ~ Detailed Design
+CMSI 4071 Fall 2024
+==========================================
+
+DETAILED CSC AND CSU DESCRIPTIONS:
+   Well done on this section ~ nothing to add here.
+
+DETAILED CLASS DESCRIPTIONS:
+   Excellent and complete work on this section ~ nothing to add here.
+
+DETAILED INTERFACE DESCRIPTIONS:
+   Great job here as well, just think about for your next document, try to
+   make sure that the headings stay on the same page as the text that goes
+   with them.  There is a setting called "keep with next" that you can use
+   to accomplish this.  Nothing to add here.
+
+DETAILED DATA STRUCTURE DESCRIPTIONS:
+   Good work on the details of the data structures ~ nothing to add here.
+
+DETAILED DESIGN DIAGRAMS:
+   The diagrams are pretty good.  The 'class' diagram is nice, although not
+   strictly a class diagram.  The other two are a bit hard to read and don't
+   really show much about the design since parts of them overlap each other.
+   Still, good enough ~ nothing to add here.
+
+DATABASE DESIGN AND DESCRIPTION:
+   Awesome job on this section, too, and amazing work overall.  You four
+   really took the project to heart and did an amazing job on the documents
+   for the class.  You obviously take the concepts of software design and
+   construction seriously and you will be great software engineers!
+
+   Great job!
+
+----------------------------------------------
+OVERALL ASSESSMENT:
+   Category                          Points
+   CSC/CSU Descriptions:                2 of  2
+   Class Descriptions:                  3 of  3
+   Interface Descriptions:              3 of  3
+   Data structure Descriptions:         1 of  1
+   Design diagrams:                     4 of  4
+   Database design/descriptions:        2 of  2
+                                     ===========
+   Subtotal                            15 of 15
+   ------------------------------------------------------
+   Total Percentage:  15/15 = 100% which is an A-plus
+
+
+
