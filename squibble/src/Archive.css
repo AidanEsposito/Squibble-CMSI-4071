@@ -1,39 +1,37 @@
-/* Archive.css */
-
 .archive-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background-color: rgb(9, 179, 235); /* Match header background color */
-  color: #fff; /* White text for contrast */
-  padding: 10px; /* Match header padding */
+  background-color: rgb(9, 179, 235); 
+  color: #fff; 
+  padding: 10px; 
   border-bottom: 2px solid #007bff; /* Optional: add a bottom border */
 }
 
 .archive-header h1 {
   margin: 0;
-  font-size: 24px; /* Keep the same font size */
+  font-size: 24px; 
 }
 
 .back-button {
-  background-color: #555; /* Match button style in header */
-  color: #fff; /* White text */
+  background-color: #555; 
+  color: #fff; 
   border: none;
-  border-radius: 5px; /* Rounded corners */
-  padding: 8px 16px; /* Adjust padding to match header button */
+  border-radius: 5px; 
+  padding: 8px 16px; 
   cursor: pointer;
-  transition: background-color 0.3s; /* Smooth transition for hover effect */
+  transition: background-color 0.3s; 
 }
 
 .back-button:hover {
-  background-color: #777; /* Darker shade on hover to match header button */
+  background-color: #777; 
 }
 
 .screenshot-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr); /* Fixed 2-column grid layout */
-  gap: 15px; /* Spacing between items */
-  margin-top: 20px; /* Space above the grid */
+  grid-template-columns: repeat(2, 1fr); 
+  gap: 15px; 
+  margin-top: 20px; 
 }
 
 .screenshot-item {
@@ -54,9 +52,37 @@
 
 
 .date {
-  margin-top: 5px; /* Space above the date */
-  font-size: 0.9em; /* Smaller font size for the date */
-  color: #666; /* Gray color for the date text */
-  text-align: center; /* Center the date text */
+  margin-top: 5px; 
+  font-size: 0.9em; 
+  color: #666; 
+  text-align: center; 
 }
 
+@media (max-width: 768px) {
+  .archive-header {
+    flex-direction: column;
+    align-items: center;
+    padding: 15px;
+    text-align: center; 
+  }
+
+  .archive-header h1 {
+    margin-bottom: 10px; 
+    font-size: 20px; 
+  }
+
+  .back-button {
+    width: 100%; 
+    padding: 12px; 
+  }
+
+  .screenshot-grid {
+    gap: 10px; 
+    margin-top: 15px; 
+    padding: 5px; 
+  }
+
+  .screenshot-item {
+    padding: 8px; 
+  }
+}

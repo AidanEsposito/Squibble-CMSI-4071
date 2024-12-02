@@ -36,3 +36,21 @@
     transform: rotate(360deg);
   }
 }
+
+@media (max-width: 768px) {
+  /* App container */
+  .App-header {
+    padding: 10px; 
+    font-size: calc(8px + 2vmin); 
+  }
+
+  .App-logo {
+    height: 30vmin; 
+  }
+
+  /* Ensure links and interactive elements are accessible */
+  .App-link {
+    font-size: 14px; 
+    padding: 5px;
+  }
+}
