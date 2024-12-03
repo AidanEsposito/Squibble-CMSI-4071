@@ -1,0 +1,31 @@
+.toggle-tool-tabs-button {
+    position: fixed; /* Ensure the button is always visible */
+    bottom: 20px;    /* Place it at the bottom of the viewport */
+    right: 20px;     /* Align it with the right edge, near where the tool tabs appear */
+    z-index: 100;    /* Keep it on top of other elements */
+    background-color: #007BFF; /* Button color */
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 50px;      /* Increase width to give more space */
+    height: 50px;     /* Increase height for better centering */
+    display: none;
+    align-items: center;   /* Center vertically */
+    justify-content: center; /* Center horizontally */
+    cursor: pointer;
+    font-size: 24px;   /* Adjust font size to keep emoji looking good */
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Add subtle shadow for depth */
+    outline: none; /* Remove the default button outline */
+  }
+  
+  
+  .toggle-tool-tabs-button:hover {
+    background-color: #0056b3; /* Darker blue when hovered */
+  }
+
+  /* Display the button only for screens with a max width of 768px (mobile devices) */
+@media (max-width: 768px) {
+    .toggle-tool-tabs-button {
+      display: flex; /* Show the button on mobile devices */
+    }
+  }
