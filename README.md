@@ -135,6 +135,10 @@ Each media can be described as the following:
 
 ### Gifs ### 
 
+-Currently working on implementation. WOuld be similar to images media tool in the sense would allow you to upload a gif of your choice from certain selection onto the board.
+
+-Draw over and drag it around screen are some of the capabilties we are hoping to implement along side it
+
 ### Post-it Notes ###
 
 ## The submenu also has other featues to interact with the whiteboard ##
