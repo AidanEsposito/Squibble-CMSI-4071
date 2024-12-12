@@ -3,6 +3,7 @@ import Canvas from './Canvas.js';
 import ToolTabs from './ToolTabs.js';
 import ColorMenu from './ColorMenu.js';
 import TextOptions from './TextOptions.js';
+import ToggleToolTabsButton from './ToggleToolTabsButton.js';
 import { useAuthentication } from './Auth.js';
 import './Whiteboard.css';
 
@@ -27,6 +28,7 @@ const Whiteboard = ({ texts, setTexts, shouldReset, setShouldReset }) => {
   const [isTextMenuOpen, setIsTextMenuOpen] = useState(false); // Track if the TextOptions menu is open
   const [sidePanelVisible, setSidePanelVisible] = useState(false); // Visibility of the side panel
   const [sidePanelHovered, setSidePanelHovered] = useState(false); // Track if the side panel is being hovered over
+  const [toolTabsManuallyVisible, setToolTabsManuallyVisible] = useState(false); // Track visibility when using the manual button
   const timeoutRef = useRef(null);
   
   // Function to reset the side panel timeout
@@ -43,7 +45,7 @@ const Whiteboard = ({ texts, setTexts, shouldReset, setShouldReset }) => {
   useEffect(() => {
     const handleMouseMove = (e) => {
       // Only show the panel if the cursor is in the rightmost 1% of the screen width
-      if (e.clientX >= window.innerWidth * 0.99) {
+      if (e.clientX >= window.innerWidth * 0.99 || toolTabsManuallyVisible) {
         setSidePanelVisible(true);
         resetSidePanelTimeout();
       }
@@ -183,6 +185,11 @@ const Whiteboard = ({ texts, setTexts, shouldReset, setShouldReset }) => {
               sampleColors={sampleColors}
             />
           </div>
+          {/* Toggle Button for Mobile and Manual Control */}
+          <ToggleToolTabsButton onToggleToolTabs={() => {
+            setToolTabsManuallyVisible((prev) => !prev);
+            setSidePanelVisible((prev) => !prev);
+          }} />
         </>
       )}
 

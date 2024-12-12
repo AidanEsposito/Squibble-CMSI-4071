@@ -2,8 +2,8 @@
   position: relative;
   width: 100%;
   height: 100vh;
-  overflow: hidden; /* Allow scrolling for the larger canvas */
-  background-color: #f0f0f0; /* Optional: makes the canvas area stand out */
+  overflow: hidden; 
+  background-color: #f0f0f0; 
 }
 
 .drawing-canvas {
@@ -15,51 +15,51 @@
 /* Hover Hitbox for Triggering Side Panel */
 .hover-hitbox {
   position: fixed;
-  top: 1000px; /* Aligns perfectly below the header */
+  top: 1000px; 
   right: 0;
-  width: 2%; /* The hitbox occupies only the rightmost 2% of the screen */
-  height: calc(100% - 60px); /* Adjust height to start below the header */
-  background: transparent; /* Invisible */
-  z-index: 1; /* Ensure it's below other UI elements */
-  pointer-events: auto; /* Allow interaction for hover detection */
+  width: 2%; 
+  height: calc(100% - 60px); 
+  background: transparent; 
+  z-index: 1; 
+  pointer-events: auto; 
 }
 
 /* Side Panel */
 .side-panel {
   position: fixed;
-  top: 86px; /* Align perfectly below the header */
+  top: 86px; 
   right: 0;
-  width: 150px; /* Width of the side panel */
-  height: calc(100% - 60px); /* Adjust height to start below the header */
+  width: 150px; 
+  height: calc(100% - 60px); 
   background: none;
-  box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.6); /* Large drop shadow for visibility */
+  box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.6); 
   transition: transform 0.5s ease-in-out;
-  z-index: 1; /* Below canvas and header, but above hover hitbox */
-  transform: translateX(100%); /* Hidden by default */
+  z-index: 1; 
+  transform: translateX(100%); 
 }
 
 .side-panel.visible {
-  transform: translateX(0); /* Slide back in when visible */
+  transform: translateX(0); 
 }
 
 .side-panel.hidden {
-  transform: translateX(calc(100%)); /* Keep a small part visible */
+  transform: translateX(calc(100%)); 
 }
 
 /* When side panel is expanded, allow interaction; otherwise, none */
 .side-panel {
-  pointer-events: none; /* Disable interaction when hidden */
+  pointer-events: none; 
 }
 
 .side-panel.visible {
-  pointer-events: auto; /* Allow interaction when expanded */
+  pointer-events: auto; 
 }
 
 .side-panel-content {
-  width: 250px; /* Panel width */
+  width: 250px; 
   background-color: white;
   padding: 10px;
-  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2); /* Adjust drop shadow */
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2); 
   user-select: none;
 }
 
@@ -67,20 +67,20 @@
 .tool-tabs,
 .color-menu {
   padding: 10px;
-  pointer-events: auto; /* Allow interaction when not expanded */
+  pointer-events: auto; 
 }
 
 .drawing-canvas.text-cursor {
-  cursor: text; /* Text cursor when typing */
+  cursor: text; 
 }
 
 
 .drawing-canvas.pan-cursor {
-  cursor: grab; /* Hand cursor when panning */
+  cursor: grab; 
 }
 
 .drawing-canvas.pan-cursor:active {
-  cursor: grabbing; /* Closed hand when actively panning */
+  cursor: grabbing; 
 }
 
 .tool-tabs {
@@ -115,12 +115,12 @@
 .bounding-box {
   position: absolute;
   border: 1px dashed red;
-  pointer-events: none; /* Allow interactions with the canvas and other elements */
+  pointer-events: none; 
 }
 
 .color-menu {
   position: fixed;
-  right: 160px; /* Slightly offset from the tool tabs */
+  right: 160px; 
   top: 50%;
   transform: translateY(-50%);
   display: flex;
@@ -143,7 +143,7 @@
 }
 
 .color-sample:hover {
-  transform: scale(1.2); /* Enlarge slightly on hover */
+  transform: scale(1.2); 
 }
 
 .balloon-wrapper {
@@ -158,19 +158,17 @@
   padding: 0;
   cursor: pointer;
   overflow: hidden;
-  transform: translateX(2px) translateY(-0px); /* Adjust this value to center the border correctly */
+  transform: translateX(2px) translateY(-0px); 
 }
 
-/* Container for the custom color circle */
 .custom-color-container {
   position: relative;
   display: inline-block;
-  width: 32px; /* Outer size of the container */
+  width: 32px; 
   height: 32px;
-  margin-top: 10px; /* Add some spacing */
+  margin-top: 10px; 
 }
 
-/* Background circle with the rainbow gradient along the circumference */
 .custom-color-container::before {
   content: "";
   position: absolute;
@@ -178,22 +176,20 @@
   height: 100%;
   border-radius: 50%;
   background: conic-gradient(#ff0000, #ff7f00, #ffff00, #7fff00, #00ff00, #00ff7f, #00ffff, #007fff, #0000ff, #7f00ff, #ff00ff, #ff007f, #ff0000);
-  padding: 2px; /* Controls the width of the rainbow border */
+  padding: 2px; 
   box-sizing: border-box;
-  transform: translateX(0px) translateY(-2px); /* Adjust this value to center the border correctly */
-  z-index: 0; /* Positioned behind the actual color picker */
+  transform: translateX(0px) translateY(-2px); 
+  z-index: 0; 
 }
 
-
-/* The actual custom color circle */
 .custom-color-picker {
   appearance: none;
-  width: 28px; /* Slightly smaller than the container */
+  width: 28px; 
   height: 28px;
   border-radius: 50%;
   border: none;
   position: relative;
-  z-index: 1; /* Ensures the color picker is above the gradient */
+  z-index: 1; 
   cursor: pointer;
   background-color: transparent;
 }
@@ -207,6 +203,23 @@
 }
 
 .custom-color-picker::-webkit-color-swatch-wrapper:hover {
-  transform: scale(1.2); /* Enlarge slightly on hover */
+  transform: scale(1.2); 
   transition: transform 2.3s;
+}
+
+@media (max-width: 768px) {
+  .side-panel {
+    transform: translateX(0);
+    pointer-events: auto; 
+  }
+
+  .hover-hitbox {
+    display: none; 
+  }
+
+  .side-panel {
+    width: 100%; 
+    height: auto; 
+    box-shadow: none; 
+  }
 }

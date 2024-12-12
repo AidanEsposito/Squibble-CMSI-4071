@@ -1,3 +1,4 @@
+/* Default desktop styles */
 .header {
   display: flex;
   justify-content: space-between;
@@ -5,7 +6,7 @@
   padding: 10px;
   background-color: rgb(9, 179, 235);
   color: #fff;
-  user-select: none; /* Prevent text selection */
+  user-select: none;
 }
 
 .logo {
@@ -96,8 +97,14 @@
   }
 }
 
+.auth-button-container {
+  display: flex;
+  align-items: center;
+  gap: 10px; /* Space between auth buttons */
+}
+
 .auth-button {
-  margin: 0 10px;
+  margin: 0 5px;
   padding: 8px 16px;
   background-color: #555;
   color: #fff;
@@ -109,12 +116,60 @@
   background-color: #777;
 }
 
-.auth-button-container {
-  display: inline-flex;
+.google-signin-container {
+  display: flex;
+  justify-content: center;
   align-items: center;
+  flex-wrap: wrap; /* Allow wrapping for narrow screens */
 }
 
-.google-signin-container {
-  display: inline-flex;
-  align-items: center;
+/* Mobile-specific styles */
+@media (max-width: 768px) {
+  .header {
+    flex-direction: column; /* Stack elements vertically */
+    align-items: center; /* Center align all elements */
+    padding: 15px;
+  }
+
+  .logo {
+    margin-bottom: 10px; /* Add spacing below the logo */
+  }
+
+  .logo img {
+    max-width: 80px; /* Reduce logo size for smaller screens */
+  }
+
+  .timer {
+    font-size: 14px; /* Reduce font size for better spacing */
+    width: auto; /* Allow it to adjust width naturally */
+    text-align: center;
+    margin-bottom: 10px; /* Add spacing below */
+  }
+
+  .archive button,
+  .media-menu-toggle,
+  .auth-button {
+    width: 100%; /* Buttons take full width */
+    margin-bottom: 10px; /* Add spacing between buttons */
+    padding: 10px 0; /* Increase button height for better tap targets */
+  }
+
+  .media-menu {
+    position: static; /* Position it naturally below the toggle */
+    width: 100%; /* Use full width */
+    box-shadow: none; /* Remove shadow for simplicity */
+    gap: 5px; /* Adjust spacing between menu items */
+  }
+
+  .media-menu button {
+    width: 100%; /* Full-width buttons for better usability */
+    text-align: center; /* Center text in buttons */
+    padding: 10px 0; /* Increase height for easier tapping */
+  }
+
+  .auth-button-container {
+    flex-direction: column; /* Stack buttons vertically */
+    width: 100%;
+    align-items: center;
+  }
 }

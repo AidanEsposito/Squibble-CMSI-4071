@@ -1,8 +1,11 @@
 import React, { useRef, useEffect, useState } from 'react';
+import { saveWhiteboardData, loadWhiteboardData } from './firestoreUtils.js';
 import TextOptions from './TextOptions.js';
+
 
 const Canvas = ({ currentColor, brushSize, activeTool, lines, setLines, showBoundingBoxes, isTextMenuOpen, setIsTextMenuOpen }) => {
   const canvasRef = useRef(null);
+  const whiteboardId = 'userWhiteboard';
   const [isDrawing, setIsDrawing] = useState(false);
   const [isErasing, setIsErasing] = useState(false);
   const [textMenuPosition, setTextMenuPosition] = useState(null);
@@ -25,7 +28,6 @@ const Canvas = ({ currentColor, brushSize, activeTool, lines, setLines, showBoun
 
   const [objectsToRedo, setObjectsToRedo] = useState([]);
   const [isUndoOrRedo, setIsUndoOrRedo] = useState(false);
-
 
   const handleMouseDown = (e) => {
     const { offsetX, offsetY } = e.nativeEvent;
@@ -105,8 +107,9 @@ const Canvas = ({ currentColor, brushSize, activeTool, lines, setLines, showBoun
       document.getElementById('image-upload-input').click();
     }
   };
-  
 
+  //Whiteboard Data -- Aidan
+  
 const handleMouseUp = () => {
   setIsDrawing(false);
   setIsErasing(false);
@@ -399,8 +402,6 @@ const handleMouseMove = (e) => {
     setLines((prevLines) => [...prevLines, newText]);
     setIsTextMenuOpen(false);
   };
-
-
   
 
   const handleImageUpload = (e) => {
@@ -559,10 +560,37 @@ const handleMouseMove = (e) => {
     }
   }, [activeTool]);
 
-  useEffect(() => {
-    selectedObjectsRef.current = selectedObjects;
-    combinedBoundingBoxRef.current = combinedBoundingBox;
-  }, [selectedObjects, combinedBoundingBox]);
+
+  //Possible local storage hosting idea --Aidan
+
+  // useEffect(() => {
+  //   // Save the state to localStorage whenever lines change
+  //   localStorage.setItem('whiteboardState', JSON.stringify(lines));
+  // }, [lines]);
+
+  // useEffect(() => {
+  //   const savedState = localStorage.getItem('whiteboardState');
+  //   if (savedState) {
+  //     const { lines: savedLines, images: savedImages } = JSON.parse(savedState);
+  //     setLines(savedLines || []);
+  //     setUploadedImages(savedImages || []);
+  //   }
+  // } , []);
+
+  // useEffect(() => {
+  //   const stateToSave = { 
+  //     lines, 
+  //     images: uploadedImages 
+  //   };
+  //   localStorage.setItem('whiteboardState', JSON.stringify(stateToSave));
+  // }, [lines, uploadedImages]);
+
+  // const clearWhiteboard = () => {
+  //   localStorage.removeItem('whiteboardState');
+  //   setLines([]);
+  //   setUploadedImages([]);
+  // };
+
 
   useEffect(() => {
     // Add a keydown event listener to detect the delete key
@@ -662,7 +690,18 @@ useEffect(() => {
     };
   }, [setLines, setObjectsToRedo]);
 
-  
+  //Firestore
+  useEffect(() => {
+    const fetchData = async () => {
+      const data = await loadWhiteboardData(whiteboardId);
+      if (data) {
+        setLines(data.lines || []);
+        setUploadedImages(data.images || []);
+      }
+    };
+
+    fetchData();
+  }, [whiteboardId]);
   
 
   return (
