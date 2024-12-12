@@ -1,0 +1,39 @@
+#pageCounter {
+    display: flex;
+    align-items: center;
+    border: 2px solid black;
+    justify-content: space-between;
+}
+
+#backButton {
+    visibility: hidden;
+}
+
+#displayPageNum {
+    text-align: center;
+}
+
+.GIFSection {
+    display: flex;
+    justify-content: space-between;
+}
+
+.previewGIFContainer {
+  margin: 10px auto;
+  margin-bottom: auto;
+  margin-right: 10px;
+  width:200px auto;
+  height:200px auto;
+  display:grid;
+  grid-template-columns: 100px 100px;
+  grid-row: auto auto;
+  grid-column-gap: 10px;
+  grid-row-gap: 10px;
+}
+
+.previewGIF {
+        display:flex;
+        margin:auto;
+        align-items:center;
+        justify-content:center;
+}
