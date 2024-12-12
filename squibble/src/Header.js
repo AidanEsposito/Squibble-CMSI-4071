@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import './Header.css';
 import "balloon-css";
 import { SignIn, SignOut, useAuthentication } from './Auth.js'; // Adjust the path as needed
+import PreviewGif from './gifs.js';
 
 const Header = ({
   brushSize,
@@ -72,6 +73,7 @@ const Header = ({
               <button onClick={() => console.log('GIFs button clicked')}>GIFs</button>
               <button onClick={() => console.log('Drawings button clicked')}>Drawings</button>
               <button onClick={() => console.log('Post-it Notes button clicked')}>Post-it Notes</button>
+              <PreviewGif></PreviewGif>
             </div>
           )}
         </>
