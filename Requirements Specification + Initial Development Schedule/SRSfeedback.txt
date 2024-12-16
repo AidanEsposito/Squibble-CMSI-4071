@@ -46,7 +46,7 @@ OVERALL ASSESSMENT:
    Performance Requirements            2/2
    Environment Requirements            1/1
                                      =====
-   Subtotal                            8/8
+   Subtotal                            7/8
    Preliminary Schedule                2/2
    ------------------------------------------------------
    Total Percentage:   9/10 = 90% which is an A-minus
